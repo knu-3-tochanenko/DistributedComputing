@@ -24,7 +24,7 @@ public class Main extends Application {
 //        String path = this.getClass().getResource("style.css").toExternalForm();
 //        root.getStylesheets().add(path);
         Scene scene = new Scene(root);
-        stage.setTitle("Lab 1 - Distributed Computing");
+        stage.setTitle("Lab 1 Part A - Distributed Computing");
         stage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
         stage.setScene(scene);
         stage.show();
