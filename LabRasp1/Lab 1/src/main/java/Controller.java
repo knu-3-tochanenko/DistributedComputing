@@ -27,54 +27,41 @@ public class Controller {
     private Label position_text;
 
     private boolean isRunning = false;
-    private static final int firstThreadTarget = 10;
-    private static final int secondThreadTarget = 90;
-    private static final int threadSpeed = 5;
+    private static final int FIRST_THREAD_TARGET = 10;
+    private static final int SECOND_THREAD_TARGET = 90;
+    private static final int THREAD_SPEED = 5;
     private int position = 0;
     private Thread firstThread, secondThread;
     private AtomicBoolean firstAlive = new AtomicBoolean(true);
     private AtomicBoolean secondAlive = new AtomicBoolean(false);
 
-    private void initThreads() {
-        firstThread = new Thread(() -> {
+    private Thread initSingleThread(int threadTarget) {
+        return new Thread(() -> {
             while (firstAlive.get()) {
                 Thread.yield();
-                if (position > firstThreadTarget)
+                if (position > threadTarget)
                     position--;
-                else if (position < firstThreadTarget)
+                else if (position < threadTarget)
                     position++;
                 Platform.runLater(() -> {
                     position_text.setText(String.valueOf(position));
                     bar.setProgress(position / 100.0);
                 });
                 try {
-                    Thread.sleep(threadSpeed);
+                    Thread.sleep(THREAD_SPEED);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    private void initThreads() {
+        firstThread = initSingleThread(FIRST_THREAD_TARGET);
         firstThread.setPriority(first_spinner.getValue());
         firstThread.setDaemon(true);
 
-        secondThread = new Thread(() -> {
-            while (secondAlive.get()) {
-                Thread.yield();
-                if (position > secondThreadTarget)
-                    position--;
-                else if (position < secondThreadTarget)
-                    position++;
-                Platform.runLater(() -> {
-                    position_text.setText(String.valueOf(position));
-                    bar.setProgress(position / 100.0);
-                });
-                try {
-                    Thread.sleep(threadSpeed);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        secondThread = initSingleThread(SECOND_THREAD_TARGET);
         secondThread.setPriority(second_spinner.getValue());
         secondThread.setDaemon(true);
     }
