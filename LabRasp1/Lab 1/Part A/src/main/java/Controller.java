@@ -35,6 +35,12 @@ public class Controller {
     private AtomicBoolean firstAlive = new AtomicBoolean(true);
     private AtomicBoolean secondAlive = new AtomicBoolean(false);
 
+    @FXML
+    public void initialize() {
+        first_spinner.valueProperty().addListener((obs, oldValue, newValue) -> firstThread.setPriority(newValue));
+        second_spinner.valueProperty().addListener((obs, oldValue, newValue) -> secondThread.setPriority(newValue));
+    }
+
     private Thread initSingleThread(int threadTarget, AtomicBoolean isAlive) {
         return new Thread(() -> {
             while (isAlive.get()) {
@@ -88,8 +94,8 @@ public class Controller {
             bar.setProgress(position / 100.0);
 
             starting_spinner.setDisable(true);
-            first_spinner.setDisable(true);
-            second_spinner.setDisable(true);
+//            first_spinner.setDisable(true);
+//            second_spinner.setDisable(true);
 
             startThreads();
             isRunning = true;
@@ -97,8 +103,8 @@ public class Controller {
             button.setText("RUN");
 
             starting_spinner.setDisable(false);
-            first_spinner.setDisable(false);
-            second_spinner.setDisable(false);
+//            first_spinner.setDisable(false);
+//            second_spinner.setDisable(false);
 
             killThreads();
             isRunning = false;

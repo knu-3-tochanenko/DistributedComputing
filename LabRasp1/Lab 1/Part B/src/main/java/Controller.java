@@ -38,7 +38,7 @@ public class Controller {
     // access to position and in `2` if second.
     // If it is set in `0` position then no thread
     // is alive at the moment
-    private int SEMAPHORE = 0;
+    private volatile int SEMAPHORE = 0;
 
     private Thread initSingleThread(int threadTarget, int semaphoreWorkingState) {
         return new Thread(() -> {
