@@ -29,6 +29,7 @@ public class Controller {
     private boolean isRunning = false;
     private static final int firstThreadTarget = 10;
     private static final int secondThreadTarget = 90;
+    private static final int threadSpeed = 5;
     private int position = 0;
     private Thread firstThread, secondThread;
     private AtomicBoolean firstAlive = new AtomicBoolean(true);
@@ -47,7 +48,7 @@ public class Controller {
                     bar.setProgress(position / 100.0);
                 });
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(threadSpeed);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -68,7 +69,7 @@ public class Controller {
                     bar.setProgress(position / 100.0);
                 });
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(threadSpeed);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -79,8 +80,6 @@ public class Controller {
     }
 
     public void startThreads() {
-        position = starting_spinner.getValue();
-        bar.setProgress(position / 100.0);
         initThreads();
         firstAlive.set(true);
         secondAlive.set(true);
@@ -97,10 +96,23 @@ public class Controller {
     public void onClick() {
         if (!isRunning) {
             button.setText("STOP");
+
+            position = starting_spinner.getValue();
+            bar.setProgress(position / 100.0);
+
+            starting_spinner.setDisable(true);
+            first_spinner.setDisable(true);
+            second_spinner.setDisable(true);
+
             startThreads();
             isRunning = true;
         } else {
             button.setText("RUN");
+
+            starting_spinner.setDisable(false);
+            first_spinner.setDisable(false);
+            second_spinner.setDisable(false);
+
             killThreads();
             isRunning = false;
         }

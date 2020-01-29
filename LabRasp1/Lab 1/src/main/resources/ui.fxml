@@ -26,6 +26,6 @@
                 <Label prefHeight="17.0" prefWidth="221.0" text="Second thread priority" GridPane.rowIndex="2" />
             </children>
         </GridPane>
-      <Label fx:id="position_text" layoutX="523.0" layoutY="160.0" prefHeight="17.0" prefWidth="37.0" text="jk" textAlignment="CENTER" />
+      <Label fx:id="position_text" layoutX="523.0" layoutY="160.0" prefHeight="17.0" prefWidth="37.0" text="0" textAlignment="CENTER" />
     </children>
 </AnchorPane>
