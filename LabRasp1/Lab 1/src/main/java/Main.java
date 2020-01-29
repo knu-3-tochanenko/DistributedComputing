@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
@@ -24,6 +25,7 @@ public class Main extends Application {
 //        root.getStylesheets().add(path);
         Scene scene = new Scene(root);
         stage.setTitle("Lab 1 - Distributed Computing");
+        stage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
         stage.setScene(scene);
         stage.show();
     }
