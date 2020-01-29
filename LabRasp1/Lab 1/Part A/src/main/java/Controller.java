@@ -35,9 +35,9 @@ public class Controller {
     private AtomicBoolean firstAlive = new AtomicBoolean(true);
     private AtomicBoolean secondAlive = new AtomicBoolean(false);
 
-    private Thread initSingleThread(int threadTarget) {
+    private Thread initSingleThread(int threadTarget, AtomicBoolean isAlive) {
         return new Thread(() -> {
-            while (firstAlive.get()) {
+            while (isAlive.get()) {
                 Thread.yield();
                 if (position > threadTarget)
                     position--;
@@ -57,11 +57,11 @@ public class Controller {
     }
 
     private void initThreads() {
-        firstThread = initSingleThread(FIRST_THREAD_TARGET);
+        firstThread = initSingleThread(FIRST_THREAD_TARGET, firstAlive);
         firstThread.setPriority(first_spinner.getValue());
         firstThread.setDaemon(true);
 
-        secondThread = initSingleThread(SECOND_THREAD_TARGET);
+        secondThread = initSingleThread(SECOND_THREAD_TARGET, secondAlive);
         secondThread.setPriority(second_spinner.getValue());
         secondThread.setDaemon(true);
     }

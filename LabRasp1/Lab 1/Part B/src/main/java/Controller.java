@@ -9,16 +9,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Controller {
     @FXML
-    private Button button;
+    private Button button_run_first;
 
     @FXML
-    private Spinner<Integer> starting_spinner;
+    private Button button_run_second;
 
     @FXML
-    private Spinner<Integer> first_spinner;
+    private Button button_kill_first;
 
     @FXML
-    private Spinner<Integer> second_spinner;
+    private Button button_kill_second;
+
+    @FXML
+    private Label semaphore_state_text;
 
     @FXML
     private ProgressBar bar;
@@ -26,18 +29,23 @@ public class Controller {
     @FXML
     private Label position_text;
 
-    private boolean isRunning = false;
     private static final int FIRST_THREAD_TARGET = 10;
     private static final int SECOND_THREAD_TARGET = 90;
-    private static final int THREAD_SPEED = 5;
+    private static final int THREAD_SPEED = 100;
     private int position = 0;
     private Thread firstThread, secondThread;
     private AtomicBoolean firstAlive = new AtomicBoolean(true);
     private AtomicBoolean secondAlive = new AtomicBoolean(false);
 
-    private Thread initSingleThread(int threadTarget) {
+    // SEMAPHORE set in `1` position if first thread has
+    // access to position and in `2` if second.
+    // If it is set in `0` position then no thread
+    // is alive at the moment
+    private int SEMAPHORE = 0;
+
+    private Thread initSingleThread(int threadTarget, AtomicBoolean isAlive, int semaphoreWorkingState) {
         return new Thread(() -> {
-            while (firstAlive.get()) {
+            while (isAlive.get() && SEMAPHORE == semaphoreWorkingState) {
                 Thread.yield();
                 if (position > threadTarget)
                     position--;
@@ -56,53 +64,70 @@ public class Controller {
         });
     }
 
-    private void initThreads() {
-        firstThread = initSingleThread(FIRST_THREAD_TARGET);
-        firstThread.setPriority(first_spinner.getValue());
-        firstThread.setDaemon(true);
-
-        secondThread = initSingleThread(SECOND_THREAD_TARGET);
-        secondThread.setPriority(second_spinner.getValue());
-        secondThread.setDaemon(true);
-    }
-
-    public void startThreads() {
-        initThreads();
-        firstAlive.set(true);
-        secondAlive.set(true);
-        firstThread.start();
-        secondThread.start();
-    }
-
-    public void killThreads() {
-        firstAlive.set(false);
-        secondAlive.set(false);
+    @FXML
+    private void initialize() {
+        button_kill_first.setDisable(true);
+        button_kill_second.setDisable(true);
     }
 
     @FXML
-    public void onClick() {
-        if (!isRunning) {
-            button.setText("STOP");
+    public void runFirst() {
+        SEMAPHORE = 1;
 
-            position = starting_spinner.getValue();
-            bar.setProgress(position / 100.0);
+        firstThread = initSingleThread(FIRST_THREAD_TARGET, firstAlive, 1);
+        firstThread.setDaemon(true);
 
-            starting_spinner.setDisable(true);
-            first_spinner.setDisable(true);
-            second_spinner.setDisable(true);
+        semaphore_state_text.setText("LOCKED BY 1 THREAD");
+        button_run_first.setDisable(true);
+        button_run_second.setDisable(false);
+        button_kill_first.setDisable(false);
+        button_kill_second.setDisable(true);
 
-            startThreads();
-            isRunning = true;
-        } else {
-            button.setText("RUN");
+        firstAlive.set(true);
+        firstThread.start();
+    }
 
-            starting_spinner.setDisable(false);
-            first_spinner.setDisable(false);
-            second_spinner.setDisable(false);
+    @FXML
+    public void killFirst() {
+        SEMAPHORE = 0;
 
-            killThreads();
-            isRunning = false;
-        }
+        firstAlive.set(false);
+
+        semaphore_state_text.setText("UNLOCKED");
+        button_run_first.setDisable(false);
+        button_run_second.setDisable(false);
+        button_kill_first.setDisable(true);
+        button_kill_second.setDisable(true);
+    }
+
+    @FXML
+    public void runSecond() {
+        SEMAPHORE = 2;
+
+        secondThread = initSingleThread(SECOND_THREAD_TARGET, secondAlive, 2);
+        secondThread.setDaemon(true);
+
+        semaphore_state_text.setText("LOCKED BY 2 THREAD");
+        button_run_first.setDisable(false);
+        button_run_second.setDisable(true);
+        button_kill_first.setDisable(true);
+        button_kill_second.setDisable(false);
+
+        secondAlive.set(true);
+        secondThread.start();
+    }
+
+    @FXML
+    public void killSecond() {
+        SEMAPHORE = 0;
+
+        secondAlive.set(false);
+
+        semaphore_state_text.setText("UNLOCKED");
+        button_run_first.setDisable(false);
+        button_run_second.setDisable(false);
+        button_kill_first.setDisable(true);
+        button_kill_second.setDisable(true);
     }
 
 }
