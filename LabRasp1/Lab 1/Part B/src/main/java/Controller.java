@@ -33,7 +33,6 @@ public class Controller {
     private static final int SECOND_THREAD_TARGET = 90;
     private static final int THREAD_SPEED = 100;
     private int position = 0;
-    private Thread firstThread, secondThread;
     private AtomicBoolean firstAlive = new AtomicBoolean(true);
     private AtomicBoolean secondAlive = new AtomicBoolean(false);
 
@@ -70,18 +69,26 @@ public class Controller {
         button_kill_second.setDisable(true);
     }
 
+    private void buttonVisibility(
+            boolean run_first,
+            boolean run_second,
+            boolean kill_first,
+            boolean kill_second) {
+        button_run_first.setDisable(run_first);
+        button_run_second.setDisable(run_second);
+        button_kill_first.setDisable(kill_first);
+        button_kill_second.setDisable(kill_second);
+    }
+
     @FXML
     public void runFirst() {
         SEMAPHORE = 1;
 
-        firstThread = initSingleThread(FIRST_THREAD_TARGET, firstAlive, 1);
+        Thread firstThread = initSingleThread(FIRST_THREAD_TARGET, firstAlive, 1);
         firstThread.setDaemon(true);
 
         semaphore_state_text.setText("LOCKED BY 1 THREAD");
-        button_run_first.setDisable(true);
-        button_run_second.setDisable(false);
-        button_kill_first.setDisable(false);
-        button_kill_second.setDisable(true);
+        buttonVisibility(true, false, false, true);
 
         firstAlive.set(true);
         firstThread.start();
@@ -94,24 +101,18 @@ public class Controller {
         firstAlive.set(false);
 
         semaphore_state_text.setText("UNLOCKED");
-        button_run_first.setDisable(false);
-        button_run_second.setDisable(false);
-        button_kill_first.setDisable(true);
-        button_kill_second.setDisable(true);
+        buttonVisibility(false, false, true, true);
     }
 
     @FXML
     public void runSecond() {
         SEMAPHORE = 2;
 
-        secondThread = initSingleThread(SECOND_THREAD_TARGET, secondAlive, 2);
+        Thread secondThread = initSingleThread(SECOND_THREAD_TARGET, secondAlive, 2);
         secondThread.setDaemon(true);
 
         semaphore_state_text.setText("LOCKED BY 2 THREAD");
-        button_run_first.setDisable(false);
-        button_run_second.setDisable(true);
-        button_kill_first.setDisable(true);
-        button_kill_second.setDisable(false);
+        buttonVisibility(false, true, true, false);
 
         secondAlive.set(true);
         secondThread.start();
@@ -124,10 +125,7 @@ public class Controller {
         secondAlive.set(false);
 
         semaphore_state_text.setText("UNLOCKED");
-        button_run_first.setDisable(false);
-        button_run_second.setDisable(false);
-        button_kill_first.setDisable(true);
-        button_kill_second.setDisable(true);
+        buttonVisibility(false, false, true, true);
     }
 
 }
