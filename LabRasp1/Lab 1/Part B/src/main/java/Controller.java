@@ -6,6 +6,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Spinner;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Controller {
     @FXML
@@ -32,32 +33,34 @@ public class Controller {
     private static final int FIRST_THREAD_TARGET = 10;
     private static final int SECOND_THREAD_TARGET = 90;
     private static final int THREAD_SPEED = 100;
-    private int position = 0;
+    private AtomicInteger position = new AtomicInteger(0);
 
     // SEMAPHORE set in `1` position if first thread has
     // access to position and in `2` if second.
     // If it is set in `0` position then no thread
     // is alive at the moment
-    private volatile int SEMAPHORE = 0;
+    private AtomicInteger SEMAPHORE = new AtomicInteger(0);
 
     private Thread initSingleThread(int threadTarget, int semaphoreWorkingState) {
         return new Thread(() -> {
-            while (SEMAPHORE == semaphoreWorkingState) {
+            while (SEMAPHORE.get() == semaphoreWorkingState) {
                 Thread.yield();
-                if (position > threadTarget)
-                    position--;
-                else if (position < threadTarget)
-                    position++;
+                if (position.get() > threadTarget)
+                    position.set(position.get() - 1);
+                else if (position.get() < threadTarget)
+                    position.set(position.get() + 1);
                 else {
-                    SEMAPHORE = 0;
-                    Platform.runLater(() -> {
-                        semaphore_state_text.setText("UNLOCKED");
-                        buttonVisibility(false, false, true, true);
-                    });
+                    if (SEMAPHORE.compareAndSet(semaphoreWorkingState, 0))
+                        Platform.runLater(() -> {
+                            semaphore_state_text.setText("UNLOCKED");
+                            buttonVisibility(false, false, true, true);
+                        });
                 }
                 Platform.runLater(() -> {
-                    position_text.setText(String.valueOf(position));
-                    bar.setProgress(position / 100.0);
+                    synchronized (bar) {
+                        position_text.setText(String.valueOf(position));
+                        bar.setProgress(position.get() / 100.0);
+                    }
                 });
                 try {
                     Thread.sleep(THREAD_SPEED);
@@ -87,7 +90,7 @@ public class Controller {
 
     @FXML
     public void runFirst() {
-        SEMAPHORE = 1;
+        SEMAPHORE.set(1);
 
         Thread firstThread = initSingleThread(FIRST_THREAD_TARGET, 1);
         firstThread.setDaemon(true);
@@ -101,7 +104,7 @@ public class Controller {
 
     @FXML
     public void killFirst() {
-        SEMAPHORE = 0;
+        SEMAPHORE.set(0);
 
         semaphore_state_text.setText("UNLOCKED");
         buttonVisibility(false, false, true, true);
@@ -109,7 +112,7 @@ public class Controller {
 
     @FXML
     public void runSecond() {
-        SEMAPHORE = 2;
+        SEMAPHORE.set(2);
 
         Thread secondThread = initSingleThread(SECOND_THREAD_TARGET, 2);
         secondThread.setDaemon(true);
@@ -123,7 +126,7 @@ public class Controller {
 
     @FXML
     public void killSecond() {
-        SEMAPHORE = 0;
+        SEMAPHORE.set(0);
 
         semaphore_state_text.setText("UNLOCKED");
         buttonVisibility(false, false, true, true);

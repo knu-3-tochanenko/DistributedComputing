@@ -6,6 +6,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Spinner;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Controller {
     @FXML
@@ -30,13 +31,14 @@ public class Controller {
     private static final int FIRST_THREAD_TARGET = 10;
     private static final int SECOND_THREAD_TARGET = 90;
     private static final int THREAD_SPEED = 5;
-    private int position = 0;
+    private AtomicInteger position = new AtomicInteger(0);
     private Thread firstThread, secondThread;
     private AtomicBoolean firstAlive = new AtomicBoolean(true);
     private AtomicBoolean secondAlive = new AtomicBoolean(false);
 
     @FXML
     public void initialize() {
+        initThreads();
         first_spinner.valueProperty().addListener((obs, oldValue, newValue) -> firstThread.setPriority(newValue));
         second_spinner.valueProperty().addListener((obs, oldValue, newValue) -> secondThread.setPriority(newValue));
     }
@@ -45,13 +47,15 @@ public class Controller {
         return new Thread(() -> {
             while (isAlive.get()) {
                 Thread.yield();
-                if (position > threadTarget)
-                    position--;
-                else if (position < threadTarget)
-                    position++;
+                if (position.get() > threadTarget)
+                    position.set(position.get() - 1);
+                else if (position.get() < threadTarget)
+                    position.set(position.get() + 1);
                 Platform.runLater(() -> {
-                    position_text.setText(String.valueOf(position));
-                    bar.setProgress(position / 100.0);
+                    synchronized (bar) {
+                        position_text.setText(String.valueOf(position));
+                        bar.setProgress(position.get() / 100.0);
+                    }
                 });
                 try {
                     Thread.sleep(THREAD_SPEED);
@@ -83,6 +87,13 @@ public class Controller {
     public void killThreads() {
         firstAlive.set(false);
         secondAlive.set(false);
+
+        try {
+            firstThread.join();
+            secondThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -90,12 +101,10 @@ public class Controller {
         if (!isRunning) {
             button.setText("STOP");
 
-            position = starting_spinner.getValue();
-            bar.setProgress(position / 100.0);
+            position.set(starting_spinner.getValue());
+            bar.setProgress(position.get() / 100.0);
 
             starting_spinner.setDisable(true);
-//            first_spinner.setDisable(true);
-//            second_spinner.setDisable(true);
 
             startThreads();
             isRunning = true;
@@ -103,8 +112,6 @@ public class Controller {
             button.setText("RUN");
 
             starting_spinner.setDisable(false);
-//            first_spinner.setDisable(false);
-//            second_spinner.setDisable(false);
 
             killThreads();
             isRunning = false;
