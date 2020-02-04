@@ -11,9 +11,9 @@ const (
 	// N is number of Rows
 	N int = 10
 	// M is number of Columns
-	M int = 10
+	M int = 8
 	// BEEZ is number of BEEEEEEZ
-	BEEZ = 5
+	BEEZ = 4
 )
 
 func generateMatrix() [][]bool {
@@ -65,7 +65,7 @@ func findBear(id int,
 
 		case <-isBearFound:
 			isBearFound <- true
-			fmt.Println("")
+			return
 		default:
 			fmt.Println("Beez group ", id, " is searching in sector", sectorToString(sector))
 
@@ -75,6 +75,7 @@ func findBear(id int,
 					fmt.Println("Beez group ", id, " found bear in sector ",
 						sectorToString(sector), " in ", index,
 						".\nThe bear was punished! Poor poor guy!")
+					fmt.Println("Beez group ", id, " returned")
 					isBearFound <- true
 					return
 				}
@@ -97,7 +98,7 @@ func main() {
 		go findBear(i, &waitGroup, sectors, isBearFound)
 	}
 
-	for i := 1; i < M; i++ {
+	for i := 1; i < N; i++ {
 		sectors <- matrix[i]
 	}
 
