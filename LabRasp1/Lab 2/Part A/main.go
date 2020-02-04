@@ -16,15 +16,18 @@ const (
 	BEEZ = 5
 )
 
-func generateMatrix() [N][M]bool {
+func generateMatrix() [][]bool {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	// this will
-	matrix := [N][M]bool{}
+	matrix := make([][]bool, N)
+	for row := range matrix {
+		matrix[row] = make([]bool, M)
+	}
+
 	matrix[r.Intn(N)][r.Intn(M)] = true
 	return matrix
 }
 
-func drawMatrix(matrix [N][M]bool) {
+func drawMatrix(matrix [][]bool) {
 	for i := range matrix {
 		for j := range matrix[i] {
 			if matrix[i][j] {
@@ -37,9 +40,22 @@ func drawMatrix(matrix [N][M]bool) {
 	}
 }
 
+func sectorToString(sector []bool) string {
+	res := "["
+	for element := range sector {
+		if sector[element] {
+			res += "X"
+		} else {
+			res += "-"
+		}
+	}
+	res += "]"
+	return res
+}
+
 func findBear(id int,
 	waitGroup *sync.WaitGroup,
-	sectors <-chan [M]bool,
+	sectors <-chan []bool,
 	isBearFound chan bool) {
 
 	defer waitGroup.Done()
@@ -49,15 +65,16 @@ func findBear(id int,
 
 		case <-isBearFound:
 			isBearFound <- true
-			fmt.Println("...")
+			fmt.Println("")
 		default:
-			fmt.Println("Beez group ", id, " is searching in sector", sector)
+			fmt.Println("Beez group ", id, " is searching in sector", sectorToString(sector))
 
 			for index, element := range sector {
 				time.Sleep(time.Microsecond * 100)
 				if element {
-					fmt.Println("Beez group ", id, " found bear in sector ", sector, " in ", index,
-						". The bear was punished!")
+					fmt.Println("Beez group ", id, " found bear in sector ",
+						sectorToString(sector), " in ", index,
+						".\nThe bear was punished! Poor poor guy!")
 					isBearFound <- true
 					return
 				}
@@ -65,13 +82,12 @@ func findBear(id int,
 		}
 		fmt.Println("Beez group ", id, " returned")
 	}
-
 }
 
 func main() {
 	var matrix = generateMatrix()
 	drawMatrix(matrix)
-	sectors := make(chan [M]bool, M)
+	sectors := make(chan []bool, N)
 	isBearFound := make(chan bool, 1)
 
 	var waitGroup sync.WaitGroup
