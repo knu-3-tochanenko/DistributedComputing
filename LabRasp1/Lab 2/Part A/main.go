@@ -9,11 +9,11 @@ import (
 
 const (
 	// N is number of Rows
-	N int = 10
+	N int = 8
 	// M is number of Columns
-	M int = 8
+	M int = 12
 	// BEEZ is number of BEEEEEEZ
-	BEEZ = 4
+	BEEZ = 5
 )
 
 func generateMatrix() [][]bool {
@@ -72,16 +72,16 @@ func findBear(id int,
 			for index, element := range sector {
 				time.Sleep(time.Microsecond * 100)
 				if element {
-					fmt.Println("Beez group ", id, " found bear in sector ",
+					fmt.Println("Beez squad ", id, " found bear in sector ",
 						sectorToString(sector), " in ", index,
 						".\nThe bear was punished! Poor poor guy!")
-					fmt.Println("Beez group ", id, " returned")
+					fmt.Println("Beez squad ", id, " returned")
 					isBearFound <- true
 					return
 				}
 			}
 		}
-		fmt.Println("Beez group ", id, " returned")
+		fmt.Println("Beez squad ", id, " returned")
 	}
 }
 
@@ -93,12 +93,12 @@ func main() {
 
 	var waitGroup sync.WaitGroup
 
-	for i := 1; i < BEEZ; i++ {
+	for i := 0; i < BEEZ; i++ {
 		waitGroup.Add(1)
 		go findBear(i, &waitGroup, sectors, isBearFound)
 	}
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		sectors <- matrix[i]
 	}
 
