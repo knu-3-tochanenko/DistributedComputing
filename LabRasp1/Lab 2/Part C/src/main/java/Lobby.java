@@ -85,7 +85,7 @@ public class Lobby extends Thread {
             }
 
             try {
-                sleep(100);
+                sleep(Settings.SLEEP_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

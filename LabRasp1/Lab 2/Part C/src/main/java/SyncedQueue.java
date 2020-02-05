@@ -9,7 +9,7 @@ public class SyncedQueue {
         this.size = size;
     }
 
-    public synchronized int getSize() {
+    public int getSize() {
         return queue.size();
     }
 
@@ -37,15 +37,15 @@ public class SyncedQueue {
         return queue.remove();
     }
 
-    public synchronized boolean isEmpty() {
+    public boolean isEmpty() {
         return queue.size() == 0;
     }
 
-    public synchronized void clear() {
+    public void clear() {
         queue.clear();
     }
 
-    public synchronized void copy(SyncedQueue queue) {
+    public void copy(SyncedQueue queue) {
         this.clear();
         while (!queue.isEmpty())
             this.queue.add(queue.get());
