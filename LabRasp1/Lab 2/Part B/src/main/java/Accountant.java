@@ -26,9 +26,11 @@ public class Accountant extends Thread {
                 this.interrupt();
             }
             sum += item.getPrice();
-            System.out.println("Accountant got item #" + item.getCode() +
-                    " : $" + item.getPrice() + ". Total sum by far is $" + sum);
+            System.out.println("Accountant got item " + ANSI.BRIGHT_YELLOW + "#" + item.getCode() +
+                    ANSI.RESET + " : " + ANSI.BRIGHT_GREEN + "$" + item.getPrice() + ANSI.RESET
+            + ". Total sum by far is " + ANSI.BRIGHT_GREEN + "$" + sum + ANSI.RESET);
         }
-        System.out.println("We stolen items for total of $" + sum + "!");
+        System.out.println(ANSI.BRIGHT_PURPLE + "We stolen items for total of " +
+                ANSI.BRIGHT_GREEN + "$" + sum + ANSI.BRIGHT_PURPLE + "!" + ANSI.RESET);
     }
 }

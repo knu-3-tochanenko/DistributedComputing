@@ -21,8 +21,8 @@ public class Loader extends Thread {
         Item item;
         while (isWorking.get() || !fromThief.isEmpty()) {
             item = fromThief.get();
-            System.out.println("Loader loaded item #" + item.getCode() +
-                    " : $" + item.getPrice());
+            System.out.println("Loader loaded item " + ANSI.BRIGHT_YELLOW + "#" + item.getCode() +
+                    ANSI.RESET + " : " + ANSI.BRIGHT_GREEN + "$" + item.getPrice() + ANSI.RESET);
             try {
                 sleep(Settings.DELAY);
             } catch (InterruptedException e) {

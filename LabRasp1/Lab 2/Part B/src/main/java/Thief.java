@@ -18,7 +18,7 @@ public class Thief extends Thread {
     public void run() {
         while (isWorking.get()) {
             if (stolenItems >= Settings.ALL_ELEMENTS) {
-                System.out.println("Items have ended!");
+                System.out.println(ANSI.BRIGHT_RED + "Items have ended!" + ANSI.RESET);
                 isWorking.set(false);
                 loaderWorking.set(false);
             }
@@ -26,8 +26,8 @@ public class Thief extends Thread {
                     random.nextInt(50) * 100 + 99);
             queue.add(newItem);
             stolenItems++;
-            System.out.println("Thief put item #" + newItem.getCode() +
-                    " : $" + newItem.getPrice());
+            System.out.println("Thief put item " + ANSI.BRIGHT_CYAN + "#" + newItem.getCode() +
+                    ANSI.RESET + " : " + ANSI.BRIGHT_GREEN + "$" + newItem.getPrice() + ANSI.RESET);
             try {
                 sleep(Settings.DELAY);
             } catch (InterruptedException e) {
