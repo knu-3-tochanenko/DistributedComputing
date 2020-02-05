@@ -22,7 +22,7 @@ public class Thief extends Thread {
                 isWorking.set(false);
                 loaderWorking.set(false);
             }
-            Item newItem = new Item(random.nextInt(1000),
+            Item newItem = new Item(stolenItems,
                     random.nextInt(50) * 100 + 99);
             queue.add(newItem);
             stolenItems++;
