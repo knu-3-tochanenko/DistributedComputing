@@ -17,17 +17,17 @@ public class Thief extends Thread {
     @Override
     public void run() {
         while (isWorking.get()) {
-            if (stolenItems >= Settings.ALL_ELEMENTS) {
-                System.out.println(ANSI.BRIGHT_RED + "Items have ended!" + ANSI.RESET);
-                isWorking.set(false);
-                loaderWorking.set(false);
-            }
             Item newItem = new Item(stolenItems,
                     random.nextInt(50) * 100 + 99);
             queue.add(newItem);
             stolenItems++;
             System.out.println("Thief put item " + ANSI.BRIGHT_CYAN + "#" + newItem.getCode() +
                     ANSI.RESET + " : " + ANSI.BRIGHT_GREEN + "$" + newItem.getPrice() + ANSI.RESET);
+            if (stolenItems >= Settings.ALL_ELEMENTS) {
+                System.out.println(ANSI.BRIGHT_RED + "Items have ended!" + ANSI.RESET);
+                isWorking.set(false);
+                loaderWorking.set(false);
+            }
             try {
                 sleep(Settings.DELAY);
             } catch (InterruptedException e) {

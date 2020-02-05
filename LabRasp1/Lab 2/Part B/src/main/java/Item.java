@@ -1,5 +1,5 @@
 public class Item {
-    private int price;
+    private volatile int price;
     private int code;
 
     Item(int code, int price) {
