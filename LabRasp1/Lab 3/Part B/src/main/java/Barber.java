@@ -1,33 +1,39 @@
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Barber implements Runnable {
 
-    private Semaphore sleeping;
     private Semaphore barberChair;
-    private int totalCount = 0;
+    private AtomicBoolean isSleeping = new AtomicBoolean(true);
 
-    public Barber(Semaphore sleeping, Semaphore barberChair) {
-        this.sleeping = sleeping;
+    public Barber(Semaphore barberChair) {
         this.barberChair = barberChair;
+    }
+
+    public void wakeUp() {
+        if (isSleeping.get()) {
+            isSleeping.set(false);
+            barberChair.release();
+            System.out.println(ANSI.BRIGHT_YELLOW + "Barber has waken up" + ANSI.RESET);
+        }
     }
 
     @Override
     public void run() {
         while (true) {
-            if (sleeping.tryAcquire()) {
-                System.out.println(ANSI.GREEN + "Barber is sleeping... zzzz..." + ANSI.RESET);
-            } else {
-                System.out.println(ANSI.BRIGHT_GREEN + "Barber is doing it's stuff" + ANSI.RESET);
+            if (isSleeping.get()) {
+                System.out.println(ANSI.BRIGHT_RED + "Barber is sleeping... zzzz..." + ANSI.RESET);
                 try {
                     Thread.sleep(Settings.SLEEP_TIME * 10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                totalCount++;
-                barberChair.release();
-                if (totalCount == Settings.CUSTOMER_COUNT) {
-                    System.out.println(ANSI.RED + "My work is done. It's time to go home!!!" + ANSI.RESET);
-                    break;
+            } else {
+                if (barberChair.tryAcquire()) {
+                    isSleeping.set(true);
+                } else {
+                    System.out.println(ANSI.BRIGHT_GREEN + "Barber is doing it's stuff" + ANSI.RESET);
+                    barberChair.release();
                 }
             }
         }
