@@ -1,10 +1,11 @@
 public class Barrier {
     private int elements;
-    private int completedElements = 0;
+    private int completedElements;
     private Runnable runnable;
 
     Barrier(int elements, Runnable runnable) {
         this.elements = elements;
+        this.completedElements = 0;
         this.runnable = runnable;
     }
 

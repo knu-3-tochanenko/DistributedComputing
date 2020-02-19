@@ -7,7 +7,7 @@ public class Main {
         int blockCount = (int) Math.ceil(Settings.RECRUIT_COUNT * 1.0 / Settings.BLOCK_SIZE);
         Thread[] thread = new Thread[blockCount];
         Barrier barrier = new Barrier(blockCount, () -> {
-            System.out.println(ANSI.Cyan("YAAAAAY!"));
+            System.out.println(ANSI.Cyan("Barrier reached!"));
 
             for (int i = 0; i < Settings.RECRUIT_COUNT; i++)
                 if (list.get(i))
@@ -15,6 +15,12 @@ public class Main {
                 else
                     System.out.print('<');
             System.out.println();
+
+            try {
+                Thread.sleep(Settings.SLEEP_TIME * 15);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
         for (int i = 0; i < blockCount - 1; i++) {
             thread[i] = new Thread(new SoldiersNormalizer(list,
