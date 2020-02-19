@@ -40,4 +40,32 @@ public class ANSI {
     public static String paint(String color, String str) {
         return color + str + ANSI.RESET;
     }
+
+    public static String Red(String str) {
+        return paint(ANSI.BRIGHT_RED, str);
+    }
+
+    public static String Green(String str) {
+        return paint(ANSI.BRIGHT_GREEN, str);
+    }
+
+    public static String Yellow(String str) {
+        return paint(ANSI.BRIGHT_YELLOW, str);
+    }
+
+    public static String Blue(String str) {
+        return paint(ANSI.BRIGHT_BLUE, str);
+    }
+
+    public static String Purple(String str) {
+        return paint(ANSI.BRIGHT_PURPLE, str);
+    }
+
+    public static String Cyan(String str) {
+        return paint(ANSI.BRIGHT_CYAN, str);
+    }
+
+    public static String White(String str) {
+        return paint(ANSI.BRIGHT_WHITE, str);
+    }
 }
