@@ -210,7 +210,7 @@ func dfs(graph *[][]int, first, second int) {
 			}
 		}
 	}
-	fmt.Println(Magenta("Departure ", first, ". Destination ", second, ". Distence: ", distance[second]))
+	fmt.Println(Magenta("SEARCHING PASS FROM ", first, " TO ", second, ". DISTANCE: ", distance[second]))
 	fmt.Print(Purple(second, " -> "))
 	for parent[second] != -1 {
 		second = parent[second]
