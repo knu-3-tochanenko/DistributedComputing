@@ -19,7 +19,7 @@ public class RWLock {
             notifyAll();
     }
 
-    synchronized void writeLock() {
+    synchronized void modifyLock() {
         while (readers > 0) {
             try {
                 wait();
@@ -30,7 +30,7 @@ public class RWLock {
         locked = true;
     }
 
-    synchronized void writeUnlock() {
+    synchronized void modifyUnlock() {
         locked = false;
         notifyAll();
     }
