@@ -32,16 +32,18 @@ public class GamePanel extends JPanel {
 
         score = new JLabel("Score: 0");
         score.setVisible(true);
-        score.setFont(new Font("Serif", Font.PLAIN, 22));
+        score.setFont(new Font("Iosevka Bold Extended", Font.PLAIN, 22));
+        score.setForeground(Color.WHITE);
         score.setSize(200, 100);
-        score.setLocation(5, height - 120);
+        score.setLocation(10, height - 630);
         this.add(score);
 
         bestScore = new JLabel("Best Score: 0");
         bestScore.setVisible(true);
-        bestScore.setFont(new Font("Serif", Font.PLAIN, 22));
+        bestScore.setFont(new Font("Iosevka Bold Extended", Font.PLAIN, 22));
+        bestScore.setForeground(Color.WHITE);
         bestScore.setSize(200, 100);
-        bestScore.setLocation(5, height - 100);
+        bestScore.setLocation(10, height - 600);
         this.add(bestScore);
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();

@@ -5,8 +5,8 @@ public class Bullet extends Thread {
     private int x;
     private int y;
 
-    private static final int dy = 5;
-    private static final int dx = 3;
+    private static final int dy = 10;
+    private static final int dx = 6;
     private final int sizeX = 70;
     private final int sizeY = 60;
     boolean side;
