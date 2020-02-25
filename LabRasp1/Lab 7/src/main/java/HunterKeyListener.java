@@ -21,14 +21,14 @@ public class HunterKeyListener implements KeyListener {
                 Bullet bullet;
                 if (panel.hunter.getSide() == 1)
                     bullet =
-                            new Bullet(panel, panel.hunter, panel.hunter.getX() + 70, panel.hunter.getY() - 0, false);
+                            new Bullet(panel, panel.hunter, panel.hunter.getX() + 60, panel.hunter.getY(), false);
                 else
                     bullet =
                             new Bullet(
                                     panel,
                                     panel.hunter,
-                                    panel.hunter.getX() + Hunter.sizeX - 70,
-                                    panel.hunter.getY() - 0, true);
+                                    panel.hunter.getX() + Hunter.sizeX - 60,
+                                    panel.hunter.getY(), true);
                 bullet.start();
             }
 

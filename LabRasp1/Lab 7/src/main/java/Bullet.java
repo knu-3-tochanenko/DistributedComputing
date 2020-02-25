@@ -20,7 +20,7 @@ public class Bullet extends Thread {
         this.hunter = hunter;
         this.x = x;
         this.y = y;
-        this.bulletLabel = new JLabel(new ImageIcon(getClass().getResource(side ? "fishLR.png" : "fishRL.png")));
+        this.bulletLabel = new JLabel(new ImageIcon(getClass().getResource(side ? "rainLR.png" : "rainRL.png")));
         bulletLabel.setSize(new Dimension(sizeX, sizeY));
         bulletLabel.setLocation(x - sizeX / 2, y - sizeY / 2);
         this.side = side;
@@ -31,6 +31,8 @@ public class Bullet extends Thread {
     public void run() {
         hunter.addBullet(1);
         panel.add(bulletLabel);
+
+        int sX = 0, sY = 0;
 
         while (!isInterrupted()) {
             if (y < 0) break;
@@ -46,6 +48,8 @@ public class Bullet extends Thread {
                 synchronized (duck) {
                     if (duck.x < x && x < duck.x + duck.sizeX && duck.y < y && y < duck.y + duck.sizeY) {
                         duck.interrupt();
+                        sX = duck.x;
+                        sY = duck.y;
                         this.interrupt();
                         break;
                     }
@@ -61,6 +65,23 @@ public class Bullet extends Thread {
 
         panel.remove(bulletLabel);
         panel.repaint();
+        if ((sX + sY) > 0)
+            showSplash(sX, sY - 30);
         hunter.addBullet(-1);
+    }
+
+    private void showSplash(int x, int y) {
+        JLabel splash = new JLabel(new ImageIcon(getClass().getResource("splash.png")));
+        splash.setSize(new Dimension(110, 110));
+        splash.setLocation(x, y);
+        panel.add(splash);
+//        panel.repaint();
+        try {
+            sleep(100);
+        } catch (InterruptedException e) {
+            interrupt();
+        }
+        panel.remove(splash);
+        panel.repaint();
     }
 }

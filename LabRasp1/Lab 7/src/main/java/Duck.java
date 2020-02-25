@@ -77,4 +77,5 @@ public class Duck extends Thread {
         panel.repaint();
         panel.ducks.remove(this);
     }
+
 }
