@@ -1,12 +1,8 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 
-public class Duck extends Thread {
+public class NyanCat extends Thread {
     int x;
     int y;
 
@@ -17,10 +13,10 @@ public class Duck extends Thread {
     final int sizeX = 90;
     final int sizeY = 53;
 
-    private JLabel duck;
+    private JLabel nyanCat;
     private GamePanel panel;
 
-    Duck(int newWidth, int newHeight, GamePanel newPanel) {
+    NyanCat(int newWidth, int newHeight, GamePanel newPanel) {
         super();
 
         width = newWidth;
@@ -30,11 +26,9 @@ public class Duck extends Thread {
         Random random = new Random();
         int duckType = Math.abs(random.nextInt()) % 2;
 
+        nyanCat = new JLabel(new ImageIcon(getClass().getResource((duckType == 0) ? "LR.png" : "RL.png")));
 
-        if (duckType == 0) duck = new JLabel(new ImageIcon(getClass().getResource("LR.png")));
-        else duck = new JLabel(new ImageIcon(getClass().getResource("RL.png")));
-
-        duck.setSize(new Dimension(sizeX, sizeY));
+        nyanCat.setSize(new Dimension(sizeX, sizeY));
 
         speedX = Math.abs(random.nextInt(3)) + 1;
         speedY = -Math.abs(random.nextInt(2)) - 1;
@@ -47,7 +41,7 @@ public class Duck extends Thread {
 
     @Override
     public void run() {
-        panel.add(duck);
+        panel.add(nyanCat);
 
         boolean flag = true;
 
@@ -61,7 +55,7 @@ public class Duck extends Thread {
 
             x = nx;
             y = ny;
-            duck.setLocation(x, y);
+            nyanCat.setLocation(x, y);
 
             try {
                 sleep(20);
@@ -73,9 +67,9 @@ public class Duck extends Thread {
         if (flag) panel.changedCoins(1);
         else panel.changedCoins(-1);
 
-        panel.remove(duck);
+        panel.remove(nyanCat);
         panel.repaint();
-        panel.ducks.remove(this);
+        panel.nyanCats.remove(this);
+        new Splash(panel, x, y).start();
     }
-
 }

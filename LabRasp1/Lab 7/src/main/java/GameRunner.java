@@ -7,16 +7,16 @@ public class GameRunner extends Thread {
 
     @Override
     public void run() {
-        if (panel.hunter == null) {
-            panel.hunter = new Hunter(panel.gameCreator, panel);
-            panel.hunter.start();
+        if (panel.tank == null) {
+            panel.tank = new Tank(panel.gameCreator, panel);
+            panel.tank.start();
         }
 
         while (!isInterrupted()) {
-            if (panel.ducks.size() < panel.getMaxDucks()) {
-                Duck duck = new Duck(panel.width, panel.height, panel);
-                panel.ducks.add(duck);
-                duck.start();
+            if (panel.nyanCats.size() < panel.getMaxDucks()) {
+                NyanCat nyanCat = new NyanCat(panel.width, panel.height, panel);
+                panel.nyanCats.add(nyanCat);
+                nyanCat.start();
             }
             try {
                 sleep(200);

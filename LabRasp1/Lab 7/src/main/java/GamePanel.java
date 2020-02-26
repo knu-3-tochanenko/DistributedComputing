@@ -15,9 +15,9 @@ public class GamePanel extends JPanel {
     private static final int maxBullets = 5;
     private int maxDucks = minimumDucks;
 
-    ConcurrentLinkedQueue<Duck> ducks = new ConcurrentLinkedQueue<>();
+    ConcurrentLinkedQueue<NyanCat> nyanCats = new ConcurrentLinkedQueue<>();
 
-    Hunter hunter = null;
+    Tank tank = null;
     MainFrame gameCreator;
 
     GamePanel(MainFrame mainFrame) {
@@ -30,20 +30,11 @@ public class GamePanel extends JPanel {
         setLayout(null);
         setSize(width, height);
 
-        score = new JLabel("Score: 0");
-        score.setVisible(true);
-        score.setFont(new Font("Iosevka Bold Extended", Font.PLAIN, 22));
-        score.setForeground(Color.WHITE);
-        score.setSize(200, 100);
-        score.setLocation(10, height - 630);
+
+        score = setupText("Score: 0", 22, Color.WHITE, 200, 100, 10, height - 630);
         this.add(score);
 
-        bestScore = new JLabel("Best Score: 0");
-        bestScore.setVisible(true);
-        bestScore.setFont(new Font("Iosevka Bold Extended", Font.PLAIN, 22));
-        bestScore.setForeground(Color.WHITE);
-        bestScore.setSize(200, 100);
-        bestScore.setLocation(10, height - 600);
+        bestScore = setupText("Best Score: 0", 22, Color.WHITE, 200, 100, 10, height - 600);
         this.add(bestScore);
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -57,6 +48,16 @@ public class GamePanel extends JPanel {
 
         GameRunner game = new GameRunner(this);
         game.start();
+    }
+
+    private JLabel setupText(String text, int fontSize, Color color, int width, int height, int x, int y) {
+        JLabel label = new JLabel(text);
+        label.setVisible(true);
+        label.setFont(new Font("Iosevka Bold Extended", Font.PLAIN, fontSize));
+        label.setForeground(color);
+        label.setSize(width, height);
+        label.setLocation(x, y);
+        return label;
     }
 
     synchronized int getMaxDucks() {

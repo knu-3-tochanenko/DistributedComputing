@@ -13,11 +13,11 @@ public class Bullet extends Thread {
 
     private GamePanel panel;
     private JLabel bulletLabel;
-    private Hunter hunter;
+    private Tank tank;
 
-    Bullet(GamePanel panel, Hunter hunter, int x, int y, boolean side) {
+    Bullet(GamePanel panel, Tank tank, int x, int y, boolean side) {
         this.panel = panel;
-        this.hunter = hunter;
+        this.tank = tank;
         this.x = x;
         this.y = y;
         this.bulletLabel = new JLabel(new ImageIcon(getClass().getResource(side ? "rainLR.png" : "rainRL.png")));
@@ -29,7 +29,7 @@ public class Bullet extends Thread {
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     @Override
     public void run() {
-        hunter.addBullet(1);
+        tank.addBullet(1);
         panel.add(bulletLabel);
 
         int sX = 0, sY = 0;
@@ -44,12 +44,12 @@ public class Bullet extends Thread {
 
             bulletLabel.setLocation(x - sizeX / 2, y - sizeY / 2);
 
-            for (Duck duck : panel.ducks) {
-                synchronized (duck) {
-                    if (duck.x < x && x < duck.x + duck.sizeX && duck.y < y && y < duck.y + duck.sizeY) {
-                        duck.interrupt();
-                        sX = duck.x;
-                        sY = duck.y;
+            for (NyanCat nyanCat : panel.nyanCats) {
+                synchronized (nyanCat) {
+                    if (nyanCat.x < x && x < nyanCat.x + nyanCat.sizeX && nyanCat.y < y && y < nyanCat.y + nyanCat.sizeY) {
+                        nyanCat.interrupt();
+                        sX = nyanCat.x;
+                        sY = nyanCat.y;
                         this.interrupt();
                         break;
                     }
@@ -65,23 +65,6 @@ public class Bullet extends Thread {
 
         panel.remove(bulletLabel);
         panel.repaint();
-        if ((sX + sY) > 0)
-            showSplash(sX, sY - 30);
-        hunter.addBullet(-1);
-    }
-
-    private void showSplash(int x, int y) {
-        JLabel splash = new JLabel(new ImageIcon(getClass().getResource("splash.png")));
-        splash.setSize(new Dimension(110, 110));
-        splash.setLocation(x, y);
-        panel.add(splash);
-//        panel.repaint();
-        try {
-            sleep(100);
-        } catch (InterruptedException e) {
-            interrupt();
-        }
-        panel.remove(splash);
-        panel.repaint();
+        tank.addBullet(-1);
     }
 }

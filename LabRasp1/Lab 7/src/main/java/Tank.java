@@ -6,7 +6,7 @@ import java.awt.*;
  *  Copyright (c) 2019  Andrii Khoma. All rights reserved.
  */
 
-public class Hunter extends Thread {
+public class Tank extends Thread {
     private JLabel hunterLabel;
     private GamePanel panel;
 
@@ -25,7 +25,7 @@ public class Hunter extends Thread {
     private boolean keyLeft = false;
     private boolean keyRight = false;
 
-    Hunter(MainFrame mainFrame, GamePanel panel) {
+    Tank(MainFrame mainFrame, GamePanel panel) {
         this.width = panel.width;
         this.panel = panel;
         x = panel.width / 2;

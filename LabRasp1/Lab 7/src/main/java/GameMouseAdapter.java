@@ -17,12 +17,12 @@ public class GameMouseAdapter extends MouseAdapter {
 
         int x = e.getX();
         int y = e.getY();
-        for (Duck duck : panel.ducks) {
-            synchronized (duck) {
-                if (x >= duck.x - rad
-                        && x <= duck.x + duck.sizeX + rad
-                        && y >= duck.y - rad
-                        && y <= duck.y + duck.sizeY + rad) duck.interrupt();
+        for (NyanCat nyanCat : panel.nyanCats) {
+            synchronized (nyanCat) {
+                if (x >= nyanCat.x - rad
+                        && x <= nyanCat.x + nyanCat.sizeX + rad
+                        && y >= nyanCat.y - rad
+                        && y <= nyanCat.y + nyanCat.sizeY + rad) nyanCat.interrupt();
             }
         }
     }
