@@ -5,6 +5,8 @@ public class Splash extends Thread {
     private JLabel splash = new JLabel(new ImageIcon(getClass().getResource("splash.png")));
     private GamePanel panel;
     int x, y;
+    int sizeX = 110;
+    int sizeY = 110;
 
     Splash(GamePanel panel, int x, int y) {
         this.panel = panel;
@@ -14,7 +16,7 @@ public class Splash extends Thread {
 
     @Override
     public void run() {
-        splash.setSize(new Dimension(110, 110));
+        splash.setSize(new Dimension(sizeX, sizeY));
         splash.setLocation(x, y);
         panel.add(splash);
         panel.repaint();

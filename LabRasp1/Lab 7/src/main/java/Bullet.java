@@ -32,8 +32,6 @@ public class Bullet extends Thread {
         tank.addBullet(1);
         panel.add(bulletLabel);
 
-        int sX = 0, sY = 0;
-
         while (!isInterrupted()) {
             if (y < 0) break;
             y -= dy;
@@ -48,8 +46,6 @@ public class Bullet extends Thread {
                 synchronized (nyanCat) {
                     if (nyanCat.x < x && x < nyanCat.x + nyanCat.sizeX && nyanCat.y < y && y < nyanCat.y + nyanCat.sizeY) {
                         nyanCat.interrupt();
-                        sX = nyanCat.x;
-                        sY = nyanCat.y;
                         this.interrupt();
                         break;
                     }

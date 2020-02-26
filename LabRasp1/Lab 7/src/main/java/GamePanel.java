@@ -18,11 +18,11 @@ public class GamePanel extends JPanel {
     ConcurrentLinkedQueue<NyanCat> nyanCats = new ConcurrentLinkedQueue<>();
 
     Tank tank = null;
-    MainFrame gameCreator;
+    MainFrame mainFrame;
 
     GamePanel(MainFrame mainFrame) {
         setBackground(Color.WHITE);
-        this.gameCreator = mainFrame;
+        this.mainFrame = mainFrame;
         width = mainFrame.getWidth();
         height = mainFrame.getHeight();
 

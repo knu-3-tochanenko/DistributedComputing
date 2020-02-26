@@ -1,11 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-/*
- *  Created by ahoma on 04/04/2019.
- *  Copyright (c) 2019  Andrii Khoma. All rights reserved.
- */
-
 public class Tank extends Thread {
     private JLabel hunterLabel;
     private GamePanel panel;

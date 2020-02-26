@@ -8,7 +8,7 @@ public class GameRunner extends Thread {
     @Override
     public void run() {
         if (panel.tank == null) {
-            panel.tank = new Tank(panel.gameCreator, panel);
+            panel.tank = new Tank(panel.mainFrame, panel);
             panel.tank.start();
         }
 
