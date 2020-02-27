@@ -20,15 +20,21 @@ public class HunterKeyListener implements KeyListener {
             if (keyEvent.getKeyCode() == 32 && panel.tank.getCountBullet() < panel.getMaxBullets()) {
                 Bullet bullet;
                 if (panel.tank.getSide() == 1)
-                    bullet =
-                            new Bullet(panel, panel.tank, panel.tank.getX() + 60, panel.tank.getY(), false);
+                    bullet = new Bullet(
+                            panel,
+                            panel.tank,
+                            panel.tank.getX() + 60,
+                            panel.tank.getY(),
+                            false
+                    );
                 else
-                    bullet =
-                            new Bullet(
-                                    panel,
-                                    panel.tank,
-                                    panel.tank.getX() + Tank.sizeX - 60,
-                                    panel.tank.getY(), true);
+                    bullet = new Bullet(
+                            panel,
+                            panel.tank,
+                            panel.tank.getX() + Tank.sizeX - 60,
+                            panel.tank.getY(),
+                            true
+                    );
                 bullet.start();
             }
 
