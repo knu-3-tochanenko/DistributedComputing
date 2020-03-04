@@ -140,12 +140,12 @@
                <GridPane.margin>
                   <Insets right="8.0" />
                </GridPane.margin></Button>
-            <Slider fx:id="slider_speed" GridPane.columnIndex="3">
+            <Slider fx:id="slider_speed" GridPane.columnIndex="3" visible="false">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Slider>
-            <Label fx:id="text_speed" prefWidth="256.0" text="SPEED" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Label fx:id="text_speed" prefWidth="256.0" text="SPEED" GridPane.columnIndex="3" GridPane.rowIndex="1" visible="false">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
