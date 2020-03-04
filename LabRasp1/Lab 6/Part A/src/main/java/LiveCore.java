@@ -1,5 +1,4 @@
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
@@ -36,18 +35,19 @@ public class LiveCore implements Runnable {
     public void run() {
         Random random = new Random();
         while (isAlive.get()) {
-//            System.out.println("WORKING IN COLOR " + color);
-            color = colors[random.nextInt(7)];
+            if (S.COLORED)
+                color = colors[random.nextInt(7)];
+
             for (int i = t; i < b; i++)
                 for (int j = l; j < r; j++) {
                     if (!isAlive.get())
                         return;
                     sub.set(aliveCell(i, j) ? 1 : 0, i, j);
-                    final int iL = i;
-                    final int jL = j;
                     if (S.COLORED) {
+                        final int iL = i;
+                        final int jL = j;
                         Platform.runLater(() -> {
-                            Node node = getNodeByRowColumnIndex(iL, jL, matrix);
+                            Node node = S.getNodeByRowColumnIndex(iL, jL, matrix);
                             node.setStyle("-fx-background-color: " + (M.get(iL, jL) == 1 ? "black" : color));
                         });
                     }
@@ -59,9 +59,7 @@ public class LiveCore implements Runnable {
                 }
             try {
                 barrier.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (BrokenBarrierException e) {
+            } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
             }
         }
@@ -83,19 +81,5 @@ public class LiveCore implements Runnable {
             return sum <= 3;
         }
         return false;
-    }
-
-    private Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
-        Node result = null;
-        ObservableList<Node> children = gridPane.getChildren();
-
-        for (Node node : children) {
-            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-                result = node;
-                break;
-            }
-        }
-
-        return result;
     }
 }

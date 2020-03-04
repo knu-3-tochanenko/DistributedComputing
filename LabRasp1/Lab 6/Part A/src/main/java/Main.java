@@ -13,17 +13,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        Parent root = null;
+        Parent root;
         try {
             root = FXMLLoader.load(getClass().getResource("view.fxml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        String path = this.getClass().getResource("style.css").toExternalForm();
-//        root.getStylesheets().add(path);
         Scene scene = new Scene(root);
         stage.setTitle("Lab 6 - Part A - Distributed Computing - Game of Live");
-//        stage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
         stage.setScene(scene);
         stage.show();
     }
