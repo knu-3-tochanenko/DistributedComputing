@@ -3,44 +3,67 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
+import java.util.Random;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LiveCore implements Runnable {
-    private Matrix M;
+    private Matrix M, sub;
     private GridPane matrix;
     private AtomicBoolean isAlive;
 
-    LiveCore(Matrix m, GridPane matrix, AtomicBoolean isAlive) {
+    private CyclicBarrier barrier;
+
+    private int l, r, t, b;
+    String color;
+
+    private String[] colors = {"darksalmon", "aquamarine", "lightgreen", "lightgrey", "navajowhite", "yellow", "plum"};
+
+    LiveCore(Matrix m, Matrix sub, CyclicBarrier barrier, GridPane matrix, AtomicBoolean isAlive, int l, int r, int t, int b) {
         M = m;
+        this.sub = sub;
+        this.barrier = barrier;
         this.matrix = matrix;
         this.isAlive = isAlive;
+        this.l = l;
+        this.r = r;
+        this.t = t;
+        this.b = b;
     }
 
     @Override
     public void run() {
-        Matrix sub = new Matrix(M);
+        Random random = new Random();
         while (isAlive.get()) {
-            System.out.println("RUNNING...");
-            sub.copy(M);
-            for (int i = 0; i < S.CELLS; i++)
-                for (int j = 0; j < S.CELLS; j++) {
+//            System.out.println("WORKING IN COLOR " + color);
+            color = colors[random.nextInt(7)];
+            for (int i = t; i < b; i++)
+                for (int j = l; j < r; j++) {
                     if (!isAlive.get())
                         return;
                     sub.set(aliveCell(i, j) ? 1 : 0, i, j);
                     final int iL = i;
                     final int jL = j;
+                    if (S.COLORED) {
+                        Platform.runLater(() -> {
+                            Node node = getNodeByRowColumnIndex(iL, jL, matrix);
+                            node.setStyle("-fx-background-color: " + (M.get(iL, jL) == 1 ? "black" : color));
+                        });
+                    }
                     try {
-                        Thread.sleep(1);
+                        Thread.sleep(5 * (S.COLORED ? 2 : 1));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Platform.runLater(() -> {
-                        Node node = getNodeByRowColumnIndex(iL, jL, matrix);
-                        node.setStyle("-fx-background-color:" + (aliveCell(iL, jL) ? " green" : " pink"));
-                    });
                 }
-
-            M.copy(sub);
+            try {
+                barrier.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -52,7 +75,6 @@ public class LiveCore implements Runnable {
                 sum += M.get(i, j);
             }
         }
-        System.out.println("Sum around" + x + " - " + y + " = " + sum);
         if (sum == 3)
             return true;
         if (M.get(x, y) == 1) {
