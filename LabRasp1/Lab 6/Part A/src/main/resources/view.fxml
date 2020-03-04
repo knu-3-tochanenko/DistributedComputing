@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <children>
         <GridPane fx:id="matrix" layoutX="14.0" layoutY="14.0" prefHeight="572.0" prefWidth="572.0" style="-fx-border-color: #000;">
             <columnConstraints>
@@ -128,15 +128,15 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btn_start" alignment="CENTER" mnemonicParsing="false" prefWidth="84.0" text="Start">
+            <Button fx:id="btn_start" alignment="CENTER" mnemonicParsing="false" prefWidth="84.0" text="Start" onAction="#startClick">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Button>
-            <Button fx:id="btn_stop" alignment="CENTER" mnemonicParsing="false" prefWidth="84.0" text="Stop" GridPane.columnIndex="1">
+            <Button fx:id="btn_stop" alignment="CENTER" mnemonicParsing="false" prefWidth="84.0" text="Stop" GridPane.columnIndex="1" onAction="#stopClick">
                <GridPane.margin>
                   <Insets right="8.0" />
                </GridPane.margin></Button>
-            <Button fx:id="btn_reset" alignment="CENTER" mnemonicParsing="false" prefWidth="84.0" text="Reset" GridPane.columnIndex="2">
+            <Button fx:id="btn_reset" alignment="CENTER" mnemonicParsing="false" prefWidth="84.0" text="Reset" GridPane.columnIndex="2" onAction="#resetClick">
                <GridPane.margin>
                   <Insets right="8.0" />
                </GridPane.margin></Button>

@@ -1,4 +1,5 @@
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,6 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 public class Controller {
+    private int[][] M;
+
     @FXML
     private GridPane matrix;
 
@@ -29,10 +32,13 @@ public class Controller {
 
     @FXML
     public void initialize() {
+        M = new int[S.CELLS][];
         ObservableList<Node> children = matrix.getChildren();
 
-        for (int i = 0; i < 52; i++) {
-            for (int j = 0; j < 52; j++) {
+        for (int i = 0; i < S.CELLS; i++) {
+            M[i] = new int[S.CELLS];
+            for (int j = 0; j < S.CELLS; j++) {
+                M[i][j] = 0;
                 Label label = new Label();
                 label.setPrefHeight(11);
                 label.setPrefWidth(11);
@@ -47,20 +53,28 @@ public class Controller {
             EventHandler<MouseEvent> eventHandler = e -> {
                 System.out.println(x);
                 x.setStyle("-fx-background-color: green");
+                M[matrix.getRowIndex(x)][matrix.getColumnIndex(x)] = 1;
             };
 
-            x.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+            x.addEventFilter(MouseEvent.MOUSE_MOVED, eventHandler);
         }
+    }
 
-//        EventHandler<MouseEvent> eventHandler = e -> {
-//            text_speed.setStyle("-fx-text-fill: blue");
-//        };
-//
-//        text_speed.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+    private boolean isRunning = false;
 
-//        text_speed.setOnMouseClicked(event -> text_speed.setStyle("-fx-text-fill: red"));
-//        new Thread( () -> {
-//            matrix.
-//        }).start();
+    @FXML
+    public void startClick() {
+        isRunning = true;
+
+    }
+
+    @FXML
+    public void stopClick(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    public void resetClick(ActionEvent actionEvent) {
+
     }
 }
