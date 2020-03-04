@@ -9,8 +9,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Controller {
-    private int[][] M;
+    private Matrix M;
 
     @FXML
     private GridPane matrix;
@@ -32,13 +34,11 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        M = new int[S.CELLS][];
+        M = new Matrix();
         ObservableList<Node> children = matrix.getChildren();
 
         for (int i = 0; i < S.CELLS; i++) {
-            M[i] = new int[S.CELLS];
             for (int j = 0; j < S.CELLS; j++) {
-                M[i][j] = 0;
                 Label label = new Label();
                 label.setPrefHeight(11);
                 label.setPrefWidth(11);
@@ -51,30 +51,47 @@ public class Controller {
 
         for (Node x : children) {
             EventHandler<MouseEvent> eventHandler = e -> {
-                System.out.println(x);
+//                System.out.println(x);
                 x.setStyle("-fx-background-color: green");
-                M[matrix.getRowIndex(x)][matrix.getColumnIndex(x)] = 1;
+                M.set(1, matrix.getRowIndex(x), matrix.getColumnIndex(x));
             };
 
-            x.addEventFilter(MouseEvent.MOUSE_MOVED, eventHandler);
+            x.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         }
     }
 
-    private boolean isRunning = false;
+//    private boolean isRunning = false;
+    private AtomicBoolean isAlive = new AtomicBoolean(false);
 
     @FXML
     public void startClick() {
-        isRunning = true;
-
+        System.out.println("START");
+//        isRunning = true;
+        isAlive.set(true);
+        Thread thread = new Thread(new LiveCore(M, matrix, isAlive));
+        thread.start();
     }
 
     @FXML
     public void stopClick(ActionEvent actionEvent) {
-
+        System.out.println("STOP");
+        isAlive.set(false);
     }
 
     @FXML
     public void resetClick(ActionEvent actionEvent) {
-
+        System.out.println("RESET");
+        M.clear();
+        for (int i = 0; i < S.CELLS; i++) {
+            for (int j = 0; j < S.CELLS; j++) {
+                Label label = new Label();
+                label.setPrefHeight(11);
+                label.setPrefWidth(11);
+                label.setStyle("-fx-background-color: pink");
+                matrix.setRowIndex(label, j);
+                matrix.setColumnIndex(label, i);
+                matrix.getChildren().add(label);
+            }
+        }
     }
 }

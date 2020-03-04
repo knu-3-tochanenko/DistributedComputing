@@ -33,4 +33,11 @@ public class Matrix {
                 M[i][j] = matrix.get(i, j);
         }
     }
+
+    synchronized void clear() {
+        for (int i = 0; i < S.CELLS; i++) {
+            for (int j = 0; j < S.CELLS; j++)
+                M[i][j] = 0;
+        }
+    }
 }
