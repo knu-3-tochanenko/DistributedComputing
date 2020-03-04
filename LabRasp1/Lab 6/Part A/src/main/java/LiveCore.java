@@ -38,7 +38,7 @@ public class LiveCore implements Runnable {
             if (S.COLORED)
                 color = colors[random.nextInt(7)];
 
-            for (int i = t; i < b; i++)
+            for (int i = t; i < b; i++) {
                 for (int j = l; j < r; j++) {
                     if (!isAlive.get())
                         return;
@@ -52,11 +52,12 @@ public class LiveCore implements Runnable {
                         });
                     }
                     try {
-                        Thread.sleep(5 * (S.COLORED ? 2 : 1));
+                        Thread.sleep(5 * (S.COLORED ? 4 : 1));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
+            }
             try {
                 barrier.await();
             } catch (InterruptedException | BrokenBarrierException e) {

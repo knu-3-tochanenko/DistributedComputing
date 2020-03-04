@@ -97,6 +97,7 @@ public class Controller {
             for (int j = 0; j < S.CELLS; j++) {
                 node.set(S.getNodeByRowColumnIndex(i, j, matrix));
                 node.get().setStyle("-fx-background-color: " + (M.get(i, j) == 1 ? "black" : "pink"));
+
             }
     }
 }

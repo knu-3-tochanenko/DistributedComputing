@@ -4,8 +4,6 @@ import javafx.scene.layout.GridPane;
 
 public class S {
     public static final int CELLS = 52;
-    public static final int LEN = 13;
-    public static final boolean COLORED = true;
 
     public static Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
