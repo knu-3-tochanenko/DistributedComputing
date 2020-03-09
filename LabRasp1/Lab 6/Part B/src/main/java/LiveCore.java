@@ -1,5 +1,3 @@
-import javafx.scene.layout.GridPane;
-
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
@@ -28,7 +26,6 @@ public class LiveCore implements Runnable {
         while (isAlive.get()) {
             for (int i = 0; i < S.CELLS; i++) {
                 for (int j = 0; j < S.CELLS; j++) {
-
                     try {
                         semaphore.acquire();
                     } catch (InterruptedException e) {
@@ -37,14 +34,8 @@ public class LiveCore implements Runnable {
 
                     if (!isAlive.get())
                         return;
-                    changeIfChangedAliveCell(i, j, species);
-
+                    changeIfNeeded(i, j, species);
                     semaphore.release();
-                }
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
             try {
@@ -55,7 +46,7 @@ public class LiveCore implements Runnable {
         }
     }
 
-    private boolean changeIfChangedAliveCell(int x, int y, int species) {
+    private void changeIfNeeded(int x, int y, int species) {
         int sum = 0;
         for (int i = Math.max(x - 1, 0); i < Math.min(x + 2, S.CELLS); i++) {
             for (int j = Math.max(y - 1, 0); j < Math.min(y + 2, S.CELLS); j++) {
@@ -65,19 +56,9 @@ public class LiveCore implements Runnable {
             }
         }
 
-        if (M.get(x, y) == species) {
-            if (sum < 2 || sum > 3) {
-                sub.set(0, x, y);
-                return false;
-            } else
-                return true;
-        } else if (M.get(x, y) == 0) {
-            if (sum == 3) {
-                sub.set(species, x, y);
-                return true;
-            }
-                return true;
-        }
-        return false;
+        if (M.get(x, y) == species && (sum < 2 || sum > 3))
+            sub.set(0, x, y);
+        if (M.get(x, y) == 0 && sum == 3)
+            sub.set(species, x, y);
     }
 }

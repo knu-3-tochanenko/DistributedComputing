@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Controller {
     private Matrix M;
+    private Matrix sub;
 
     @FXML
     private GridPane matrix;
@@ -20,6 +21,7 @@ public class Controller {
     @FXML
     public void initialize() {
         M = new Matrix();
+        sub = new Matrix(M);
         ObservableList<Node> children = matrix.getChildren();
 
         for (int i = 0; i < S.CELLS; i++) {
@@ -54,18 +56,27 @@ public class Controller {
     @FXML
     public void startClick() {
         int len = (S.CELLS / S.LEN) * (S.CELLS / S.LEN);
+
+        System.out.println(len);
         int sLen = (S.CELLS / S.LEN);
         isAlive = new AtomicBoolean[len];
         for (int i = 0; i < len; i++) {
             isAlive[i] = new AtomicBoolean(true);
-
         }
 
-        Matrix sub = new Matrix(M);
+
 
         CyclicBarrier barrier = new CyclicBarrier(len, () -> {
-            M.copy(sub);
-            Platform.runLater(this::drawField);
+            Runnable runnable = this::redrawField;
+            Platform.runLater(() -> {
+                runnable.run();
+
+            });
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
 
 
@@ -91,12 +102,25 @@ public class Controller {
         drawField();
     }
 
+    AtomicReference<Node> node = new AtomicReference<>();
+
     private void drawField() {
-        AtomicReference<Node> node = new AtomicReference<>();
         for (int i = 0; i < S.CELLS; i++)
             for (int j = 0; j < S.CELLS; j++) {
                 node.set(S.getNodeByRowColumnIndex(i, j, matrix));
                 node.get().setStyle("-fx-background-color: " + (M.get(i, j) == 1 ? "black" : "pink"));
+
+            }
+    }
+
+    private void redrawField() {
+        for (int i = 0; i < S.CELLS; i++)
+            for (int j = 0; j < S.CELLS; j++) {
+                if (M.get(i, j) != sub.get(i, j)) {
+                    M.set(sub.get(i, j), i, j);
+                    node.set(S.getNodeByRowColumnIndex(i, j, matrix));
+                    node.get().setStyle("-fx-background-color: " + (M.get(i, j) == 1 ? "black" : "pink"));
+                }
 
             }
     }

@@ -15,19 +15,18 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Controller {
     private Matrix M;
+    private Matrix sub;
 
     @FXML
     private GridPane matrix;
 
     @FXML
-    private RadioButton check_green;    // 1
-
-    @FXML
-    private RadioButton check_red;      // 2
+    private RadioButton check_green;
 
     @FXML
     public void initialize() {
         M = new Matrix();
+        sub = new Matrix(M);
         ObservableList<Node> children = matrix.getChildren();
 
         for (int i = 0; i < S.CELLS; i++) {
@@ -72,13 +71,19 @@ public class Controller {
 
     @FXML
     public void startClick() {
+        sub.copy(M);
+
         isAliveGreen.set(true);
         isAliveRed.set(true);
-        Matrix sub = new Matrix(M);
 
         CyclicBarrier barrier = new CyclicBarrier(2, () -> {
+            Platform.runLater(this::redrawField);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             M.copy(sub);
-            Platform.runLater(this::drawField);
         });
 
         Semaphore semaphore = new Semaphore(1);
@@ -99,8 +104,9 @@ public class Controller {
         drawField();
     }
 
+    private AtomicReference<Node> node = new AtomicReference<>();
+
     private void drawField() {
-        AtomicReference<Node> node = new AtomicReference<>();
         for (int i = 0; i < S.CELLS; i++)
             for (int j = 0; j < S.CELLS; j++) {
                 node.set(S.getNodeByRowColumnIndex(i, j, matrix));
@@ -108,10 +114,21 @@ public class Controller {
             }
     }
 
+    private void redrawField() {
+        for (int i = 0; i < S.CELLS; i++)
+            for (int j = 0; j < S.CELLS; j++) {
+                if (M.get(i, j) != sub.get(i, j)) {
+                    M.set(sub.get(i, j), i, j);
+                    node.set(S.getNodeByRowColumnIndex(i, j, matrix));
+                    node.get().setStyle("-fx-background-color: " + getColor(i, j));
+                }
+            }
+    }
+
     private String getColor(int x, int y) {
-        if (M.get(x, y) == 1)
+        if (sub.get(x, y) == 1)
             return "green";
-        if (M.get(x, y) == 2)
+        if (sub.get(x, y) == 2)
             return "red";
         return "pink";
     }

@@ -50,11 +50,11 @@ public class LiveCore implements Runnable {
                             Node node = S.getNodeByRowColumnIndex(iL, jL, matrix);
                             node.setStyle("-fx-background-color: " + (M.get(iL, jL) == 1 ? "black" : color));
                         });
-                    }
-                    try {
-                        Thread.sleep(5 * (S.COLORED ? 4 : 1));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
