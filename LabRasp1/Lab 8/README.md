@@ -1,4 +1,4 @@
-# How to create run
+# How to run this project
 
 ### Install MPJ on your Windows 10 PC
 
@@ -30,11 +30,11 @@
 3. `Add New Configuration` by tapping on plus sign. Select `Application`.
 4. Name this configuration however you want. I named it `Run MPJ Project`.
 5. Now we need to setup this configuration:
-   * `Main class`: `Main` from `default package`;
-   * `VM options`: `-jar $MPJ_HOME$\lib\starter.jar Main -np 5`;
-   * Leave `Working directory` as default;
-   * `Environment variables`: `MPJ_HOME=C:\tools\libs\mpj`. Remember to change path to `mpj` folder where your `mpj` folder is located;
-   * Leave `Use classpath of module` as default.
+   * **Main class**: `Main` from `default package`;
+   * **VM options**: `-jar $MPJ_HOME$\lib\starter.jar Main -np 5`;
+   * Leave **Working directory** as default;
+   * **Environment variables**: `MPJ_HOME=C:\tools\libs\mpj`. Remember to change path to `mpj` folder where your `mpj` folder is located;
+   * Leave **Use classpath of module** as default.
 6. Click on `Apply -> Close` to save this configuration or `Run` to run it immediately!
 
 > To run this configuration tap on `Shift + F10` and select yor configuration or `Run -> Run '<configuration name>'`.
