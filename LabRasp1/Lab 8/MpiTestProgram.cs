@@ -4,20 +4,8 @@ using MPI;
 
 namespace Lab_8 {
     class MpiTestProgram {
-        public static void Test(string[] args) {
-            using (new MPI.Environment(ref args)) {
-                Intracommunicator comm = Communicator.world;
-                // DisplayRanks(comm);
-                // CircleMessaging(comm);
-                // Barrier(comm);
-                // GatheringData(comm);
-                // MessageSpreading(comm);
-                // AllToAll(comm);
-                ComputePi(comm);
-            }
-        }
-
-        static void DisplayRanks(Intracommunicator comm) {
+        public static void DisplayRanks() {
+            Intracommunicator comm = Communicator.world;
             if (comm.Rank == 0) {
                 comm.Send("<", 1, 0);
 
@@ -31,7 +19,8 @@ namespace Lab_8 {
             }
         }
 
-        static void CircleMessaging(Intracommunicator comm) {
+        public static void CircleMessaging() {
+            Intracommunicator comm = Communicator.world;
             if (comm.Rank == 0) {
                 int[] dat = {1, 3, 2, 5};
                 comm.Send(dat, 1, 0);
@@ -44,7 +33,8 @@ namespace Lab_8 {
             }
         }
 
-        static void Barrier(Intracommunicator comm) {
+        public static void Barrier() {
+            Intracommunicator comm = Communicator.world;
             for (int i = 0; i < 5; i++) {
                 Console.WriteLine("Iteration #" + i + " from process " + comm.Rank);
                 comm.Barrier();
@@ -54,7 +44,8 @@ namespace Lab_8 {
             }
         }
 
-        static void GatheringData(Intracommunicator comm) {
+        public static void GatheringData() {
+            Intracommunicator comm = Communicator.world;
             String[] hostNames = comm.Gather(MPI.Environment.ProcessorName, 0);
             if (comm.Rank == 0) {
                 Array.Sort(hostNames);
@@ -63,7 +54,8 @@ namespace Lab_8 {
             }
         }
 
-        static void MessageSpreading(Intracommunicator comm) {
+        public static void MessageSpreading() {
+            Intracommunicator comm = Communicator.world;
             string command = "null";
 
             do {
@@ -83,7 +75,7 @@ namespace Lab_8 {
             } while (command != "exit");
         }
 
-        static string RandomCommand() {
+        private static string RandomCommand() {
             Random random = new Random((int) DateTime.Now.Ticks);
             switch (random.Next(5)) {
                 case 0:
@@ -99,7 +91,8 @@ namespace Lab_8 {
             return "none";
         }
 
-        static void AllToAll(Intracommunicator comm) {
+        public static void AllToAll() {
+            Intracommunicator comm = Communicator.world;
             string[] data = new string[comm.Size];
             for (int destination = 0; destination < comm.Size; destination++)
                 data[destination] = "From " + comm.Rank + " to " + destination;
@@ -110,7 +103,8 @@ namespace Lab_8 {
                 Console.WriteLine(comm.Rank + ": " + str);
         }
 
-        static void ComputePi(Intracommunicator comm) {
+        public static void ComputePi() {
+            Intracommunicator comm = Communicator.world;
             int dartsPerProcessor = 10000;
             Random random = new Random((int) DateTime.Now.Ticks);
 
