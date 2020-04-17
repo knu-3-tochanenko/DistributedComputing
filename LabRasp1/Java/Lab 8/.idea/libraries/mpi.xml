@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="mpi">
     <CLASSES>
-      <root url="jar://C:/utils/libs/mpj/lib/mpj.jar!/" />
-      <root url="jar://C:/utils/libs/mpj/lib/mpi.jar!/" />
+      <root url="jar://$MPJ_HOME$/lib/mpi.jar!/" />
+      <root url="jar://$MPJ_HOME$/lib/mpj.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

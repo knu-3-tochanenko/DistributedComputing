@@ -1,12 +1,12 @@
-import mpi.MPI;
-
 public class Main {
-
     public static void main(String[] args) {
-        MPI.Init(args);
-        int me = MPI.COMM_WORLD.Rank();
-        int size = MPI.COMM_WORLD.Size();
-        System.out.println("Hello world from <" + me + "> of total " + size);
-        MPI.Finalize();
+        int[] sizes = {100, 500, 1000};
+
+        for (int matSize : sizes) {
+            SimpleMatrix.calculate(args, matSize);
+            StringMatrix.calculate(args, matSize);
+            FoxMatrix.calculate(args, matSize);
+            CannonMatrix.calculate(args, matSize);
+        }
     }
 }
