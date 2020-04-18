@@ -57,9 +57,9 @@ public class FoxMatrix {
         // Розмір блоку
         int blockSize = matSize / gridSize;
 
-        var matrixA = new Matrix(matSize, "A");
-        var matrixB = new Matrix(matSize, "B");
-        var matrixC = new Matrix(matSize, "C");
+        var A = new Matrix(matSize);
+        var B = new Matrix(matSize);
+        var C = new Matrix(matSize);
 
         // Виділення кожному з потоків місця для зберігання блоків з кожної матриці та додаткового блоку матриці А
         int[] ABlock = new int[blockSize * blockSize];
@@ -69,10 +69,14 @@ public class FoxMatrix {
 
         long startTime = 0L;
         if (procRank == 0) {
-            matrixA.fillRandom(5);
-            matrixB.fillRandom(5);
+            A.fillRandom(5);
+            B.fillRandom(5);
             startTime = System.currentTimeMillis();
         }
+
+        int[] matrixA = A.getMatrix();
+        int[] matrixB = B.getMatrix();
+        int[] matrixC = C.getMatrix();
 
         // Потреба у фіксації виміру решітки потоків
         boolean[] subdims = new boolean[2];
@@ -99,8 +103,8 @@ public class FoxMatrix {
         ColComm = gridComm.Sub(subdims);
 
         // Розподілення задач для потоків декартової решітки
-        matrixScatter(matrixA.matrix, tempABlock, matSize, blockSize);
-        matrixScatter(matrixB.matrix, BBlock, matSize, blockSize);
+        matrixScatter(matrixA, tempABlock, matSize, blockSize);
+        matrixScatter(matrixB, BBlock, matSize, blockSize);
 
         // Паралельний алгоритм Фокса множення матриць
         for (int iter = 0; iter < gridSize; iter++) {
@@ -159,7 +163,7 @@ public class FoxMatrix {
         }
 
         if (gridCoords[1] == 0)
-            ColComm.Gather(resultRow, 0, blockSize * matSize, MPI.INT, matrixC.matrix, 0, blockSize * matSize, MPI.INT, 0);
+            ColComm.Gather(resultRow, 0, blockSize * matSize, MPI.INT, matrixC, 0, blockSize * matSize, MPI.INT, 0);
 
         if (procRank == 0) {
             System.out.print("3) " + matSize + " x " + matSize + ", ");

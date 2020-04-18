@@ -49,9 +49,9 @@ public class CannonMatrix {
         int blockSize = matSize / gridSize;
 
         // Виділення кожному з потоків місця для зберігання блоків з кожної матриці
-        var matrixA = new Matrix(matSize, "A");
-        var matrixB = new Matrix(matSize, "B");
-        var matrixC = new Matrix(matSize, "C");
+        var A = new Matrix(matSize);
+        var B = new Matrix(matSize);
+        var C = new Matrix(matSize);
 
         int[] ABlock = new int[blockSize * blockSize];
         int[] BBlock = new int[blockSize * blockSize];
@@ -59,10 +59,14 @@ public class CannonMatrix {
 
         long startTime = 0L;
         if (procRank == 0) {
-            matrixA.fillRandom(5);
-            matrixB.fillRandom(4);
+            A.fillRandom(5);
+            B.fillRandom(4);
             startTime = System.currentTimeMillis();
         }
+
+        int[] matrixA = A.getMatrix();
+        int[] matrixB = B.getMatrix();
+        int[] matrixC = C.getMatrix();
 
         // Потреба у фіксації виміру решітки потоків
         boolean[] subdims = new boolean[2];
@@ -89,8 +93,8 @@ public class CannonMatrix {
         ColComm = gridComm.Sub(subdims);
 
         // Розподілення задач для потоків декартової решітки
-        matrixScatter(matrixA.matrix, ABlock, matSize, blockSize);
-        matrixScatter(matrixB.matrix, BBlock, matSize, blockSize);
+        matrixScatter(matrixA, ABlock, matSize, blockSize);
+        matrixScatter(matrixB, BBlock, matSize, blockSize);
 
         /*
         Для кожного рядка і декартової решітки потоків (крім першого рядка) виконується циклічний зсув блоків матриці A
@@ -159,7 +163,7 @@ public class CannonMatrix {
         }
 
         if (gridCoords[1] == 0)
-            ColComm.Gather(resultRow, 0, blockSize * matSize, MPI.INT, matrixC.matrix, 0, blockSize * matSize, MPI.INT, 0);
+            ColComm.Gather(resultRow, 0, blockSize * matSize, MPI.INT, matrixC, 0, blockSize * matSize, MPI.INT, 0);
 
         if (procRank == 0) {
             System.out.print("4) " + matSize + " x " + matSize + ", ");

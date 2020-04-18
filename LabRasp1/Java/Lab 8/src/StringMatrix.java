@@ -9,16 +9,20 @@ public class StringMatrix {
         // Кількість потоків
         int procNum = MPI.COMM_WORLD.Size();
 
-        var matrixA = new Matrix(matSize, "A");
-        var matrixB = new Matrix(matSize, "B");
-        var matrixC = new Matrix(matSize, "C");
+        var A = new Matrix(matSize);
+        var B = new Matrix(matSize);
+        var C = new Matrix(matSize);
         long startTime = 0L;
 
         if (procRank == 0) {
-            matrixB.fillRandom(4);
-            matrixA.fillRandom(4);
+            B.fillRandom(4);
+            A.fillRandom(4);
             startTime = System.currentTimeMillis();
         }
+
+        int[] matrixA = A.getMatrix();
+        int[] matrixB = B.getMatrix();
+        int[] matrixC = C.getMatrix();
 
         /*
         В даному алгоритмі матриці розбиваються на неперервні послідовності рядків (стрічки). Нижче кожен процес
@@ -45,8 +49,8 @@ public class StringMatrix {
         1 потік, четвертий - тип даних (ціле), п'ятий - приймаючий буфер, далі - його розмір та тип даних, останній
         параметр - потік, що розподіляє дані.
         */
-        MPI.COMM_WORLD.Scatter(matrixA.matrix, 0, lineHeight * matSize, MPI.INT, bufferA, 0, lineHeight * matSize, MPI.INT, 0);
-        MPI.COMM_WORLD.Scatter(matrixB.matrix, 0, lineHeight * matSize, MPI.INT, bufferB, 0, lineHeight * matSize, MPI.INT, 0);
+        MPI.COMM_WORLD.Scatter(matrixA, 0, lineHeight * matSize, MPI.INT, bufferA, 0, lineHeight * matSize, MPI.INT, 0);
+        MPI.COMM_WORLD.Scatter(matrixB, 0, lineHeight * matSize, MPI.INT, bufferB, 0, lineHeight * matSize, MPI.INT, 0);
 
         // Для кожного потоку визначається його наступник та попередник для циклічного обміну даними
         int nextProc = (procRank + 1) % procNum;
@@ -80,7 +84,7 @@ public class StringMatrix {
         Після завершення циклу в кожному процесі буде міститися стрічка с, рівна одній з стрічок добутку A і B.
         Залишається переслати їх головному процесу.
         */
-        MPI.COMM_WORLD.Gather(bufferC, 0, lineHeight * matSize, MPI.INT, matrixC.matrix, 0, lineHeight * matSize, MPI.INT, 0);
+        MPI.COMM_WORLD.Gather(bufferC, 0, lineHeight * matSize, MPI.INT, matrixC, 0, lineHeight * matSize, MPI.INT, 0);
 
         if (procRank == 0) {
             System.out.print("2) " + matSize + " x " + matSize + ", ");
