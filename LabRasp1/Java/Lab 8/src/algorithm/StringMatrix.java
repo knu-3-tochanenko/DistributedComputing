@@ -1,3 +1,6 @@
+package algorithm;
+
+import logger.TimeLogger;
 import mpi.MPI;
 
 // Стрічкова схема
@@ -87,8 +90,10 @@ public class StringMatrix {
         MPI.COMM_WORLD.Gather(bufferC, 0, lineHeight * matSize, MPI.INT, matrixC, 0, lineHeight * matSize, MPI.INT, 0);
 
         if (procRank == 0) {
-            System.out.print("2) " + matSize + " x " + matSize + ", ");
-            System.out.println(System.currentTimeMillis() - startTime + " ms");
+            TimeLogger.log("S", matSize, MPI.COMM_WORLD.Size(), System.currentTimeMillis() - startTime);
+
+//            System.out.print("2) " + matSize + " x " + matSize + ", ");
+//            System.out.println(System.currentTimeMillis() - startTime + " ms");
         }
         MPI.Finalize();
     }

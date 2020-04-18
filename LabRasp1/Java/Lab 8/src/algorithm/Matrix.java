@@ -1,3 +1,5 @@
+package algorithm;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -16,7 +18,7 @@ public class Matrix {
     }
 
     Matrix(int[] lineMatrix) {
-        System.out.println("Constructor with line Started");
+//        System.out.println("Constructor with line Started");
         size = (int)Math.sqrt(lineMatrix.length);
 
         matrix = new int[size][];
@@ -26,18 +28,18 @@ public class Matrix {
                 matrix[i][j] = lineMatrix[i * size + j];
             }
         }
-        System.out.println("Constructor with line Finished");
+//        System.out.println("Constructor with line Finished");
     }
 
     public void copyFromLine(int[] lineMatrix) {
-        System.out.println("Copy From Line Started");
+//        System.out.println("Copy From Line Started");
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 matrix[i][j] = lineMatrix[i * size + j];
             }
         }
-        System.out.println("Copy From Line Finished");
+//        System.out.println("Copy From Line Finished");
 
     }
 
@@ -50,12 +52,12 @@ public class Matrix {
     }
 
     public int[] getMatrix() {
-        System.out.println("Get Matrix Started");
+//        System.out.println("Get algorithm.Matrix Started");
         int[] linedMatrix = new int[size * size];
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
                 linedMatrix[i * size + j] = matrix[i][j];
-        System.out.println("Get Matrix Finished");
+//        System.out.println("Get algorithm.Matrix Finished");
         return linedMatrix;
     }
 

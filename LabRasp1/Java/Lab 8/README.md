@@ -17,7 +17,7 @@
 ### Setup project
 
 1. Press on `Ctrl + Alt + Shift + S` or go to `File -> Project Structure...`.
-2. Under `Project Settings` select `Libraries`.
+2. Under `Project settings.Properties` select `Libraries`.
 3. Add `New Project Library` by tapping on plus sign in the second column.
 4. Select `Java` from dropdown and select `mpi.jar` and `mpj.jar` files from `mpj\lib`. It is located in `C:\tools\libs\mpj\lib` for me.
 

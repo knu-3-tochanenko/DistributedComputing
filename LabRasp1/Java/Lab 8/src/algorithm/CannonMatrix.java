@@ -1,3 +1,6 @@
+package algorithm;
+
+import logger.TimeLogger;
 import mpi.Cartcomm;
 import mpi.MPI;
 
@@ -166,8 +169,10 @@ public class CannonMatrix {
             ColComm.Gather(resultRow, 0, blockSize * matSize, MPI.INT, matrixC, 0, blockSize * matSize, MPI.INT, 0);
 
         if (procRank == 0) {
-            System.out.print("4) " + matSize + " x " + matSize + ", ");
-            System.out.println(System.currentTimeMillis() - startTime + " ms\n");
+            TimeLogger.log("C", matSize, MPI.COMM_WORLD.Size(), System.currentTimeMillis() - startTime);
+
+//            System.out.print("4) " + matSize + " x " + matSize + ", ");
+//            System.out.println(System.currentTimeMillis() - startTime + " ms\n");
         }
         MPI.Finalize();
     }
