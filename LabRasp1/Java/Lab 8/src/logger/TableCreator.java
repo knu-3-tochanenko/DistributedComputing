@@ -78,8 +78,6 @@ public class TableCreator {
                 splitted.addAll(Arrays.asList(splittedBetweenWhiteSpaces));
             }
 
-//            System.out.println(String.format(TABLE,generateReport("Sequential", splitted, 0)));
-
             fw.write(String.format(TABLE,generateReport("Sequential", splitted, 0)));
             fw.write(String.format(TABLE,generateReport("Cannon", splitted, 24)));
             fw.write(String.format(TABLE,generateReport("Fox", splitted, 48)));

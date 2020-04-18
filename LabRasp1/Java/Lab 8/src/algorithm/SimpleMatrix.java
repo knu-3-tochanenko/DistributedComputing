@@ -2,14 +2,19 @@ package algorithm;
 
 import logger.TimeLogger;
 import mpi.MPI;
+import settings.Properties;
 
-// Послідовний алгоритм
 public class SimpleMatrix {
-    public static void calculate(String[] args, int N) {
-        int mc;
-        int[] a = new int[N * N];
-        int[] b = new int[N * N];
-        int[] c = new int[N * N];
+    public static void calculate(String[] args, int matrixSize) {
+        int lines;
+
+        Matrix A = new Matrix(matrixSize);
+        Matrix B = new Matrix(matrixSize);
+        Matrix C = new Matrix(matrixSize);
+
+        int[] matrixA = new int[matrixSize * matrixSize];
+        int[] matrixB = new int[matrixSize * matrixSize];
+        int[] matrixC = new int[matrixSize * matrixSize];
         long startTime = 0L;
 
         MPI.Init(args);
@@ -17,85 +22,64 @@ public class SimpleMatrix {
         int size = MPI.COMM_WORLD.Size();
 
         if (rank == 0) {
-            for (int i = 0; i < N; i++)
-                for (int j = 0; j < N; j++) {
-//a[i*N+j] = i*N+j;
-                    a[i * N + j] = 1;
-//b[i*N+j] = (i==j)?1:0;
-                    b[i * N + j] = 1;
-                }
+            A.fillRandom(Properties.MAX_VALUE);
+            B.fillRandom(Properties.MAX_VALUE);
+
+            matrixA = A.getMatrix();
+            matrixB = B.getMatrix();
+            matrixC = C.getMatrix();
+
             startTime = System.currentTimeMillis();
-
-//            System.out.println("algorithm.Matrix A");
-//            for (int i = 0; i < N; i++) {
-//                for (int j = 0; j < N; j++)
-//                    System.out.print(a[i * N + j] + " ");
-//                System.out.println("");
-//            }
-//
-//            System.out.println("algorithm.Matrix B");
-//            for (int i = 0; i < N; i++) {
-//                for (int j = 0; j < N; j++)
-//                    System.out.print(b[i * N + j] + " ");
-//                System.out.println("");
-//            }
         }
 
-        mc = N / size;
-        int[] ai = new int[mc * N];
-        int[] bi = new int[N * N];
-        int[] ci = new int[mc * N];
-//send matrix a from main process to other process
+        lines = matrixSize / size;
+        int[] ai = new int[lines * matrixSize];
+        int[] bi = new int[matrixSize * matrixSize];
+        int[] ci = new int[lines * matrixSize];
+
+        // Send matrix A to other cores
         if (rank == 0) {
-            for (int i = 0; i < mc; i++)
-                for (int j = 0; j < N; j++) {
-                    ai[i * N + j] = a[i * N + j];
-                }
+            for (int i = 0; i < lines; i++)
+                if (matrixSize >= 0) System.arraycopy(matrixA, i * matrixSize, ai, i * matrixSize, matrixSize);
             for (int i = 1; i < size; i++) {
-                MPI.COMM_WORLD.Send(a, i * mc * N, mc * N, MPI.INT, i, i);
+                MPI.COMM_WORLD.Send(matrixA, i * lines * matrixSize, lines * matrixSize, MPI.INT, i, i);
             }
         } else {
-            MPI.COMM_WORLD.Recv(ai, 0, mc * N, MPI.INT, 0, rank);
+            MPI.COMM_WORLD.Recv(ai, 0, lines * matrixSize, MPI.INT, 0, rank);
         }
-//send matrix b from main process to other process
+
+        // Send matrix B to other cores
         if (rank == 0) {
-            for (int i = 0; i < N; i++)
-                for (int j = 0; j < N; j++) {
-                    bi[i * N + j] = b[i * N + j];
-                }
+            for (int i = 0; i < matrixSize; i++)
+                System.arraycopy(matrixB, i * matrixSize, bi, i * matrixSize, matrixSize);
             for (int i = 1; i < size; i++) {
-                MPI.COMM_WORLD.Send(b, 0, N * N, MPI.INT, i, i);
+                MPI.COMM_WORLD.Send(matrixB, 0, matrixSize * matrixSize, MPI.INT, i, i);
             }
         } else {
-            MPI.COMM_WORLD.Recv(bi, 0, N * N, MPI.INT, 0, rank);
+            MPI.COMM_WORLD.Recv(bi, 0, matrixSize * matrixSize, MPI.INT, 0, rank);
         }
-//calculator
-        for (int i = 0; i < mc; i++)
-            for (int j = 0; j < N; j++) {
-                ci[i * N + j] = 0;
-                for (int k = 0; k < N; k++) {
-                    ci[i * N + j] += ai[i * N + k] * bi[k * N + j];
+
+        // Multiply matrices
+        for (int i = 0; i < lines; i++)
+            for (int j = 0; j < matrixSize; j++) {
+                ci[i * matrixSize + j] = 0;
+                for (int k = 0; k < matrixSize; k++) {
+                    ci[i * matrixSize + j] += ai[i * matrixSize + k] * bi[k * matrixSize + j];
                 }
             }
-//send result from other process to main process
+
+        // Send & Receive result
         if (rank != 0) {
-            MPI.COMM_WORLD.Send(ci, 0, mc * N, MPI.INT, 0, rank);
+            MPI.COMM_WORLD.Send(ci, 0, lines * matrixSize, MPI.INT, 0, rank);
         } else {
-            for (int i = 0; i < mc; i++)
-                for (int j = 0; j < N; j++)
-                    c[i * N + j] = ci[i * N + j];
+            for (int i = 0; i < lines; i++)
+                if (matrixSize >= 0) System.arraycopy(ci, i * matrixSize, matrixC, i * matrixSize, matrixSize);
             for (int i = 1; i < size; i++)
-                MPI.COMM_WORLD.Recv(c, i * mc * N, mc * N, MPI.INT, i, i);
+                MPI.COMM_WORLD.Recv(matrixC, i * lines * matrixSize, lines * matrixSize, MPI.INT, i, i);
         }
-//show result
+
         if (rank == 0) {
-
-
-
-//            System.out.print("1) " + N + " x " + N + ", ");
-
-            TimeLogger.log("B", N, MPI.COMM_WORLD.Size(), System.currentTimeMillis() - startTime);
-//            System.out.println(System.currentTimeMillis() - startTime + " ms");
+            TimeLogger.log("B", matrixSize, MPI.COMM_WORLD.Size(), System.currentTimeMillis() - startTime);
         }
 
         MPI.Finalize();
