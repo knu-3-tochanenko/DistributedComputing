@@ -9,6 +9,25 @@ import (
 	"time"
 )
 
+var (
+	Black   = Color("\033[1;30m%s\033[0m")
+	Red     = Color("\033[1;31m%s\033[0m")
+	Green   = Color("\033[1;32m%s\033[0m")
+	Yellow  = Color("\033[1;33m%s\033[0m")
+	Purple  = Color("\033[1;34m%s\033[0m")
+	Magenta = Color("\033[1;35m%s\033[0m")
+	Teal    = Color("\033[1;36m%s\033[0m")
+	White   = Color("\033[1;37m%s\033[0m")
+)
+
+func Color(colorString string) func(...interface{}) string {
+	sprint := func(args ...interface{}) string {
+		return fmt.Sprintf(colorString,
+			fmt.Sprint(args...))
+	}
+	return sprint
+}
+
 func generateMatrix(size int, maxValue float32) [][]float32 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	matrix := make([][]float32, size)
@@ -82,7 +101,7 @@ func computeCell(A, B [][]float32, i, j int) float32 {
 	return result
 }
 
-func calculate(size, threadsNumber int) int64 {
+func calculate(size, threadsNumber int) float32 {
 	A := generateMatrix(size, 100)
 	B := generateMatrix(size, 100)
 
@@ -90,7 +109,7 @@ func calculate(size, threadsNumber int) int64 {
 	stripesMethod(A, B, threadsNumber)
 	finishTime := time.Now().UnixNano()
 
-	return (finishTime - startTime) / 1000000
+	return (float32)(finishTime-startTime) / 1000000
 }
 
 func startHTML(name string) *os.File {
@@ -183,19 +202,22 @@ func test(name string) {
 	f := startHTML(name)
 
 	for i := range sizes {
+		fmt.Println("Computing matrix size of", Yellow(sizes[i]), "...")
 		results := make([]FloatPair, 2)
-		sequentialTime = (float32)(calculate(sizes[i], 1)) / 1000000.0
+		sequentialTime = (calculate(sizes[i], 1))
+		fmt.Println(Yellow("\t1 core\t"), sequentialTime)
 
-		time = (float32)(calculate(sizes[i], 2)) / 1000000.0
+		time = (calculate(sizes[i], 2))
 		acceleration = sequentialTime / time
 		results[0] = FloatPair{time, acceleration}
+		fmt.Println(Yellow("\t2 cores\t"), time)
 
-		time = (float32)(calculate(sizes[i], 4)) / 1000000.0
+		time = (calculate(sizes[i], 4))
 		acceleration = sequentialTime / time
 		results[1] = FloatPair{time, acceleration}
+		fmt.Println(Yellow("\t4 cores\t"), time, "\n")
 
 		printRes(f, sizes[i], sequentialTime, results)
-		fmt.Println(sizes[i])
 	}
 	closeHTML(f)
 }
