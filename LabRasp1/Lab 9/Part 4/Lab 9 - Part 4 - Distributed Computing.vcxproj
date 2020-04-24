@@ -138,6 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +148,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="calculator.cpp" />
+    <ClCompile Include="html_builder.cpp" />
+    <ClCompile Include="matrix_generator.cpp" />
     <ClCompile Include="source.cpp" />
+    <ClCompile Include="stripes_divider.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="calculator.h" />
+    <ClInclude Include="html_builder.h" />
+    <ClInclude Include="matrix_generator.h" />
+    <ClInclude Include="stripes_divider.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="style.css" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
