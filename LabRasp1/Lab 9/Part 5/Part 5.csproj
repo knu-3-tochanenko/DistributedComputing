@@ -6,4 +6,8 @@
         <RootNamespace>Part_5</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="HtmlTags" Version="8.0.0" />
+    </ItemGroup>
+
 </Project>
