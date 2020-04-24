@@ -1,7 +1,17 @@
+#include "calculator.h"
 #include <iostream>
 
-using namespace std;
+int main()
+{
+	auto calculator = new Calculator("index.html");
 
-int main() {
-	cout << "Hello world!" << endl;
+	calculator->addTask(100);
+	calculator->addTask(500);
+	calculator->addTask(1000);
+	calculator->addTask(1500);
+	calculator->addTask(2000);
+	calculator->addTask(2500);
+	calculator->addTask(3000);
+
+	calculator->run();
 }
