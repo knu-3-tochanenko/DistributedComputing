@@ -24,7 +24,7 @@ public class HTMLBuilder {
         html = new Html();
         Head head = new Head();
 
-        Title title = new Title().appendChild(new Text("Results"));
+        Title title = new Title().appendChild(new Text("Report - Part 1 (Java)"));
         head.appendChild(title);
 
         Link link = new Link().setRel("stylesheet").setHref("style.css");

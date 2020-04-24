@@ -14,7 +14,7 @@ HtmlBuilder* HtmlBuilder::createHtml()
 HtmlBuilder* HtmlBuilder::addHead()
 {
 	html << "<head>" << std::endl;
-	html << "<title>Report</title>" << std::endl;
+	html << "<title>Report - Part 3 (TDD)</title>" << std::endl;
 	html << "<link rel=\"stylesheet\" href=\"style.css\">" << std::endl;
 	html << "</head>" << std::endl;
 	return this;

@@ -121,7 +121,7 @@ func startHTML(name string) *os.File {
 
 	f.WriteString(`<html lang="en">
 	<head>
-		<title>Sequential Algorithm</title>
+		<title>Report - Part 2 (GO)</title>
 		<style>
 			body {
 				font-family: Calibri;
