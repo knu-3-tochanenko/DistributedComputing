@@ -109,7 +109,7 @@ func calculate(size, threadsNumber int) float32 {
 	stripesMethod(A, B, threadsNumber)
 	finishTime := time.Now().UnixNano()
 
-	return (float32)(finishTime-startTime) / 1000000
+	return (float32)(finishTime-startTime) / 1000000000
 }
 
 func startHTML(name string) *os.File {
