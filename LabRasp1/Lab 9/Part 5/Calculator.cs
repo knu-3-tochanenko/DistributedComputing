@@ -25,39 +25,40 @@ namespace Part_5 {
             List<KeyValuePair<double, double>> results;
 
             foreach (var i in sizes) {
+                Console.WriteLine("Calculating matrix size of " + i);
                 results = new List<KeyValuePair<double, double>>();
                 sequentialTime = Calculate(i, 1) / 1000.0;
+                Console.WriteLine("\t1 core\t" + sequentialTime);
 
                 time = Calculate(i, 2) / 1000.0;
                 acceleration = sequentialTime / time;
                 results.Add(new KeyValuePair<double, double>(time, acceleration));
+                Console.WriteLine("\t2 cores\t" + time);
+
 
                 time = Calculate(i, 4) / 1000.0;
                 acceleration = sequentialTime / time;
                 results.Add(new KeyValuePair<double, double>(time, acceleration));
+                Console.WriteLine("\t4 cores\t" + time);
 
                 _builder.AddResult(i, sequentialTime, results);
-
-                Console.WriteLine(i);
             }
 
             Finish();
         }
 
-        private int Calculate(int size, int threadsNumber) {
+        private long Calculate(int size, int threadsNumber) {
             var matrixGenerator = new MatrixGenerator(size, 100);
             var A = matrixGenerator.Generate();
             var B = matrixGenerator.Generate();
 
             var stripesSchema = new StripesDivider(A, B, threadsNumber);
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+
+            long started = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
             var C = stripesSchema.CalculateProduct();
 
-            stopwatch.Stop();
-
-            return stopwatch.Elapsed.Milliseconds;
+            return (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) - started;
         }
 
         private void Finish() {

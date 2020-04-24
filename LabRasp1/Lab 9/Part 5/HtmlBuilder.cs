@@ -23,7 +23,7 @@ namespace Part_5 {
         public HtmlBuilder AddHead() {
             var link = new HtmlTag("link").Attr("rel", "stylesheet").Attr("href", "style.css");
 
-            _html.Head.Children[0].Text("Reporting Page");
+            _html.Head.Children[0].Text("Report - Part 5 (C#)");
             _html.Head.Append(link);
             return this;
         }
