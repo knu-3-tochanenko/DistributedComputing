@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"sync"
 	"time"
@@ -79,6 +80,25 @@ func computeCell(A, B [][]float32, i, j int) float32 {
 	return result
 }
 
-func main() {
+func calculate(size, threadsNumber int) int64 {
+	A := generateMatrix(size, 100)
+	B := generateMatrix(size, 100)
 
+	startTime := time.Now().UnixNano()
+	stripesMethod(A, B, threadsNumber)
+	finishTime := time.Now().UnixNano()
+
+	return (finishTime - startTime) / 1000000
+}
+
+func main() {
+	fmt.Println(calculate(256, 1), " on size 256 and 1 core")
+	fmt.Println(calculate(512, 1), " on size 512 and 1 core")
+	fmt.Println(calculate(1024, 1), " on size 1024 and 1 core")
+	// fmt.Println(calculate(2048, 1), " on size 2048 and 1 core")
+
+	fmt.Println(calculate(256, 4), " on size 256 and 4 cores")
+	fmt.Println(calculate(512, 4), " on size 512 and 4 cores")
+	fmt.Println(calculate(1024, 4), " on size 1024 and 4 cores")
+	// fmt.Println(calculate(2048, 4), " on size 2048 and 4 cores")
 }
