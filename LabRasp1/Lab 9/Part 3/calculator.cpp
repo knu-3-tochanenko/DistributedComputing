@@ -36,8 +36,6 @@ void Calculator::run()
 		std::cout << "\t4 cores\t" << time << std::endl;
 
 		builder->addResult(i, sequentialTime, results);
-
-		std::cout << i << std::endl;
 	}
 }
 
