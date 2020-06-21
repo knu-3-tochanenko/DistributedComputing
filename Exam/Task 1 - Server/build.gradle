@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.gretty' version '2.2.0'
+}
+
+group 'com.tochanenko'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'javax.websocket:javax.websocket-api:1.1'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+}
+
+gretty {
+    servletContainer = 'tomcat9'
+    contextPath = '/'
+}
